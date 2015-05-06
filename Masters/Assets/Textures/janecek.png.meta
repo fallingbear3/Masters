@@ -1,0 +1,198 @@
+fileFormatVersion: 2
+guid: 0ea2add8f2d587c4196d99f3e72f95f5
+timeCreated: 1430943435
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: shoulder
+    21300002: Head_0
+    21300004: Head_1
+    21300006: janecek_3
+    21300008: elbow
+    21300010: Torso_0
+    21300012: Torso_1
+    21300014: forearm
+    21300016: shoe_rigth
+    21300018: thigh
+    21300020: knee
+    21300022: shoe_left
+    21300024: shin
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: shoulder
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 833
+        width: 140
+        height: 178
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Head_0
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 878
+        width: 195
+        height: 245
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Head_1
+      rect:
+        serializedVersion: 2
+        x: 920
+        y: 898
+        width: 178
+        height: 216
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: janecek_3
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 413
+        width: 145
+        height: 384
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: elbow
+      rect:
+        serializedVersion: 2
+        x: 236
+        y: 680
+        width: 135
+        height: 135
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Torso_0
+      rect:
+        serializedVersion: 2
+        x: 444
+        y: 427
+        width: 330
+        height: 407
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: Torso_1
+      rect:
+        serializedVersion: 2
+        x: 825
+        y: 427
+        width: 283
+        height: 413
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: forearm
+      rect:
+        serializedVersion: 2
+        x: 228
+        y: 425
+        width: 143
+        height: 221
+      alignment: 2
+      pivot: {x: .5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shoe_rigth
+      rect:
+        serializedVersion: 2
+        x: 265
+        y: 180
+        width: 170
+        height: 91
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: thigh
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 218
+        width: 151
+        height: 181
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: knee
+      rect:
+        serializedVersion: 2
+        x: 950
+        y: 259
+        width: 115
+        height: 115
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shoe_left
+      rect:
+        serializedVersion: 2
+        x: 378
+        y: 77
+        width: 110
+        height: 85
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shin
+      rect:
+        serializedVersion: 2
+        x: 864
+        y: 74
+        width: 126
+        height: 150
+      alignment: 0
+      pivot: {x: .5, y: .5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

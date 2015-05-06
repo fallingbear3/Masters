@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 0ea2add8f2d587c4196d99f3e72f95f5
-timeCreated: 1430943435
+timeCreated: 1430945180
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -69,8 +69,8 @@ TextureImporter:
         y: 833
         width: 140
         height: 178
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .617151082, y: .765584528}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: Head_0
       rect:
@@ -149,8 +149,8 @@ TextureImporter:
         y: 180
         width: 170
         height: 91
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .397846729, y: .796854854}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: thigh
       rect:
@@ -159,8 +159,8 @@ TextureImporter:
         y: 218
         width: 151
         height: 181
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .48083213, y: .894439697}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: knee
       rect:
@@ -179,8 +179,8 @@ TextureImporter:
         y: 77
         width: 110
         height: 85
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 9
+      pivot: {x: .421062946, y: .783757985}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: shin
       rect:
@@ -189,8 +189,8 @@ TextureImporter:
         y: 74
         width: 126
         height: 150
-      alignment: 0
-      pivot: {x: .5, y: .5}
+      alignment: 2
+      pivot: {x: .5, y: 1}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

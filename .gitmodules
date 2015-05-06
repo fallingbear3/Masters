@@ -1,0 +1,3 @@
+[submodule "Masters/Assets/Shared"]
+	path = Masters/Assets/Shared
+	url = https://github.com/fallingbear3/UnitySharedLibrary.git

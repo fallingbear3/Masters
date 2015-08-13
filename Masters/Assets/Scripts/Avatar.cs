@@ -8,9 +8,11 @@ public class Avatar : MonoBehaviour
     public KeyCode CrouchKeyCode;
     public KeyCode JumpKeyCode;
     public KeyCode PunchKeyCode;
+    public KeyCode SpecialKeyCode;
     public float jumpDuration = 1;
     public float jumpHeight = 10;
     public float speed = 15;
+    public PlayerProfile PlayerProfile;
     private Tween tween;
 
     private void Start()
@@ -51,6 +53,11 @@ public class Avatar : MonoBehaviour
         if (Input.GetKeyUp(JumpKeyCode))
         {
             tween.startTween(jumpDuration);
+        }
+
+        if (Input.GetKeyUp(SpecialKeyCode))
+        {
+            GetComponent<MusicWave>().execute();
         }
     }
 

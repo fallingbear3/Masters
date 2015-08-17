@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 0ea2add8f2d587c4196d99f3e72f95f5
-timeCreated: 1430945180
-licenseType: Free
+timeCreated: 1439851770
+licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: shoulder
@@ -17,6 +17,7 @@ TextureImporter:
     21300020: knee
     21300022: shoe_left
     21300024: shin
+    21300026: shoe_left_alt
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -191,6 +192,16 @@ TextureImporter:
         height: 150
       alignment: 2
       pivot: {x: .5, y: 1}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: shoe_left_alt
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 181
+        width: 170
+        height: 91
+      alignment: 9
+      pivot: {x: .606993973, y: .808903277}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

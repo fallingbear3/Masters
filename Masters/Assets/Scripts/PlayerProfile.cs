@@ -5,6 +5,10 @@ namespace Assets.Scripts
 {
     public class PlayerProfile : MonoBehaviour
     {
+        public delegate void OnHealthChangedHandler(float value);
+
+        public event OnHealthChangedHandler OnHealthChanged;
+
         public RectTransform healthbar;
         private float health;
         private float minHealth;
@@ -14,8 +18,11 @@ namespace Assets.Scripts
         public float Health
         {
             get { return health; }
-            set { health = Math.Max(0,value);
-                updateHealth(health);
+            set
+            {
+                health = Math.Max(0, value);
+                updateHealthUi(health);
+                if (OnHealthChanged != null) OnHealthChanged(value);
             }
         }
 
@@ -27,7 +34,7 @@ namespace Assets.Scripts
             healthStep = (maxHealth - minHealth) / health;
         }
 
-        private void updateHealth(float value)
+        private void updateHealthUi(float value)
         {
             healthbar.sizeDelta = new Vector2(value * healthStep, healthbar.sizeDelta.y);
         }

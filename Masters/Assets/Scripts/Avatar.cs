@@ -16,6 +16,17 @@ public class Avatar : MonoBehaviour
         tween = GetComponent<Tween>();
         tween.OnTween += OnTween;
         tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
+
+        PlayerProfile.OnHealthChanged += value => {
+                                                      if (value == 5)
+                                                      {
+                                                          fall();
+                                                      }};
+    }
+
+    private void fall()
+    {
+        GetComponent<Animator>().SetTrigger("Fall");
     }
 
     public void musicWave()

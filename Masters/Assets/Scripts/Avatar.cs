@@ -17,11 +17,16 @@ public class Avatar : MonoBehaviour
         tween.OnTween += OnTween;
         tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
 
-        PlayerProfile.OnHealthChanged += value => {
-                                                      if (value == 5)
-                                                      {
-                                                          fall();
-                                                      }};
+        if (PlayerProfile != null)
+        {
+            PlayerProfile.OnHealthChanged += value =>
+            {
+                if (value == 5)
+                {
+                    fall();
+                }
+            };
+        }
     }
 
     private void fall()

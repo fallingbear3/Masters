@@ -18,5 +18,10 @@ namespace Assets.Scripts
             avatar.SetActive(false);
             fightScreen.SetActive(true);
         }
+        public void menu()
+        {
+            avatar.SetActive(true);
+            fightScreen.SetActive(false);
+        }
     }
 }

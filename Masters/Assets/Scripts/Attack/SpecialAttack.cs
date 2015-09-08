@@ -10,6 +10,7 @@ namespace Assets.Scripts.Attack
         {
             GetComponentsInChildren<Damage>().ToList().ForEach(damage => damage.caster = caster);
             GetComponent<Animator>().SetTrigger("Execute");
+            transform.localScale = caster.transform.localScale;
         }
     }
 }

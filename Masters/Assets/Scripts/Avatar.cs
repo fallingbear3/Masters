@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts;
+using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public class Avatar : MonoBehaviour
     public float speed = 15;
     public PlayerProfile PlayerProfile;
     private Tween tween;
+
+    public SpecialAttack specialAttackPrefab;
 
     private void Start()
     {
@@ -71,5 +74,12 @@ public class Avatar : MonoBehaviour
         {
             transform.localScale = Vector3.one.Multiply(new Vector3(1, 1, 1));
         }
+    }
+
+    public void executeSpecialAttack()
+    {
+        var newAttack = Instantiate(specialAttackPrefab);
+        newAttack.transform.position = transform.position;
+        newAttack.startAttack(this);
     }
 }

@@ -10,6 +10,7 @@ namespace Assets.Scripts.Ai
         public KeyCode JumpKeyCode;
         public KeyCode PunchKeyCode;
         public KeyCode MusicWaveCode;
+        public KeyCode CoinTossCode;
 
         private void Update()
         {
@@ -27,9 +28,9 @@ namespace Assets.Scripts.Ai
             {
                 GetComponent<Avatar>().punch();
             }
-            if (Input.GetKeyDown(MusicWaveCode))
+            if (Input.GetKeyDown(CoinTossCode))
             {
-                GetComponent<Avatar>().musicWave();
+                GetComponent<Avatar>().executeSpecialAttack();
             }
         }
     }

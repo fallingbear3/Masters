@@ -31,6 +31,7 @@ namespace Assets.Scripts.Ai
             if (Input.GetKeyDown(CoinTossCode))
             {
                 GetComponent<Avatar>().executeSpecialAttack();
+                GetComponent<Animator>().SetTrigger("SpecialAttack");
             }
         }
     }

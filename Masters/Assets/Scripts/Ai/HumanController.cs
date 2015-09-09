@@ -9,8 +9,9 @@ namespace Assets.Scripts.Ai
         public KeyCode CrouchKeyCode;
         public KeyCode JumpKeyCode;
         public KeyCode PunchKeyCode;
-        public KeyCode MusicWaveCode;
-        public KeyCode CoinTossCode;
+        public KeyCode SpecialAttackA;
+        public KeyCode SpecialAttackB;
+        public KeyCode SpecialAttackC;
 
         private void Update()
         {
@@ -28,9 +29,19 @@ namespace Assets.Scripts.Ai
             {
                 GetComponent<Avatar>().punch();
             }
-            if (Input.GetKeyDown(CoinTossCode))
+            if (Input.GetKeyDown(SpecialAttackA))
             {
-                GetComponent<Avatar>().executeSpecialAttack();
+                GetComponent<Avatar>().executeSpecialAttackA();
+                GetComponent<Animator>().SetTrigger("SpecialAttack");
+            }
+            if (Input.GetKeyDown(SpecialAttackB))
+            {
+                GetComponent<Avatar>().executeSpecialAttackB();
+                GetComponent<Animator>().SetTrigger("SpecialAttack");
+            }
+            if (Input.GetKeyDown(SpecialAttackC))
+            {
+                GetComponent<Avatar>().executeSpecialAttackC();
                 GetComponent<Animator>().SetTrigger("SpecialAttack");
             }
         }

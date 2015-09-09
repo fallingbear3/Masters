@@ -12,7 +12,9 @@ public class Avatar : MonoBehaviour
     public PlayerProfile PlayerProfile;
     private Tween tween;
 
-    public SpecialAttack specialAttackPrefab;
+    public SpecialAttack specialAttackPrefabA;
+    public SpecialAttack specialAttackPrefabB;
+    public SpecialAttack specialAttackPrefabC;
 
     private void Start()
     {
@@ -76,9 +78,22 @@ public class Avatar : MonoBehaviour
         }
     }
 
-    public void executeSpecialAttack()
+    public void executeSpecialAttackA()
     {
-        var newAttack = Instantiate(specialAttackPrefab);
+        executeSpecialAttack(specialAttackPrefabA);
+    }
+    public void executeSpecialAttackB()
+    {
+        executeSpecialAttack(specialAttackPrefabB);
+    }
+    public void executeSpecialAttackC()
+    {
+        executeSpecialAttack(specialAttackPrefabC);
+    }
+
+    private void executeSpecialAttack(SpecialAttack specialAttack)
+    {
+        var newAttack = Instantiate(specialAttack);
         newAttack.transform.position = transform.position;
         newAttack.startAttack(this);
     }

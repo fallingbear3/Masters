@@ -1,4 +1,5 @@
-﻿using Assets.Scripts;
+﻿using System;
+using Assets.Scripts;
 using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
 using UnityEngine;
@@ -76,6 +77,7 @@ public class Avatar : MonoBehaviour
         {
             transform.localScale = Vector3.one.Multiply(new Vector3(1, 1, 1));
         }
+        GetComponent<Animator>().SetFloat("Speed", speed * Math.Abs(direction));
     }
 
     public void executeSpecialAttackA()

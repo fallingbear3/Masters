@@ -17,8 +17,12 @@ public class Avatar : MonoBehaviour
     public SpecialAttack specialAttackPrefabB;
     public SpecialAttack specialAttackPrefabC;
 
+    public float Direction { get; private set; }
+    public bool AllowMovement { get; set; }
+
     private void Start()
     {
+        AllowMovement = true;
         tween = GetComponent<Tween>();
         tween.OnTween += OnTween;
         tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
@@ -68,16 +72,21 @@ public class Avatar : MonoBehaviour
 
     public void move(float direction)
     {
-        transform.AddX(speed * direction * Time.deltaTime);
-        if (direction < 0)
-        {
-            transform.localScale = Vector3.one.Multiply(new Vector3(-1, 1, 1));
-        }
-        if (direction > 0)
-        {
-            transform.localScale = Vector3.one.Multiply(new Vector3(1, 1, 1));
-        }
+        Direction = direction;
         GetComponent<Animator>().SetFloat("Speed", speed * Math.Abs(direction));
+
+        if (AllowMovement)
+        {
+            transform.AddX(speed*direction*Time.deltaTime);
+            if (direction < 0)
+            {
+                transform.localScale = Vector3.one.Multiply(new Vector3(-1, 1, 1));
+            }
+            if (direction > 0)
+            {
+                transform.localScale = Vector3.one.Multiply(new Vector3(1, 1, 1));
+            }
+        }
     }
 
     public void executeSpecialAttackA()

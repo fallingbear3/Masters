@@ -54,9 +54,14 @@ public class Avatar : MonoBehaviour
         tween.startTween(jumpDuration);
     }
 
-    public void crouch()
+    public void crouchDown()
     {
         GetComponent<Animator>().SetBool("Crouch", true);
+    }
+
+    public void crouchUp()
+    {
+        GetComponent<Animator>().SetBool("Crouch", false);
     }
 
     public void punch()

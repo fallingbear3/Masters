@@ -17,10 +17,15 @@ namespace Assets.Scripts.Ai
         {
             GetComponent<Avatar>().move( Input.GetAxis("Horizontal"));
 
-            if (Input.GetKeyDown(CrouchKeyCode))
+            if (Input.GetKey(CrouchKeyCode))
             {
-                GetComponent<Avatar>().crouch();
+                GetComponent<Avatar>().crouchDown();
             }
+            else
+            {
+                GetComponent<Avatar>().crouchUp();
+            }
+
             if (Input.GetKeyDown(JumpKeyCode))
             {
                 GetComponent<Avatar>().jump();

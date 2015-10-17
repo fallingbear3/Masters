@@ -29,11 +29,12 @@ public class Avatar : MonoBehaviour
 
         if (PlayerProfile != null)
         {
-            PlayerProfile.OnHealthChanged += value =>
+            PlayerProfile.HealthBar.OnValueChanged += value =>
             {
                 if (value == 5)
                 {
-                    fall();
+                    //TODO fix
+                    // fall();
                 }
             };
         }
@@ -109,8 +110,18 @@ public class Avatar : MonoBehaviour
 
     private void executeSpecialAttack(SpecialAttack specialAttack)
     {
-        var newAttack = Instantiate(specialAttack);
-        newAttack.transform.position = transform.position;
-        newAttack.startAttack(this);
+        if (PlayerProfile.PowerBar.Value == 100)
+        {
+            PlayerProfile.PowerBar.Value = 0;
+
+            var newAttack = Instantiate(specialAttack);
+            newAttack.transform.position = transform.position;
+            newAttack.startAttack(this);
+        }
+    }
+
+    public void takeDamage()
+    {
+        GetComponent<Animator>().SetTrigger("TakeDamage");
     }
 }

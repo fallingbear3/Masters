@@ -13,15 +13,7 @@ namespace Assets.Scripts.Ai
         }
         private void Update()
         {
-            if (GetComponent<Avatar>().PlayerProfile.PowerBar.Value == 100)
-            {
-                GetComponent<Avatar>().executeSpecialAttackA();
-            }
-            else
-            {
-                GetComponent<Avatar>().move(-0.2f);
-                GetComponent<Avatar>().punch();
-            }
+            
         }
     }
 }

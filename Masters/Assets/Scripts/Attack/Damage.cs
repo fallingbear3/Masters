@@ -13,7 +13,6 @@ namespace Assets.Scripts.Attack
             if (avatar && avatar != caster)
             {
                 avatar.PlayerProfile.HealthBar.Value -= damage;
-                avatar.takeDamage();
                 caster.PlayerProfile.PowerBar.Value += 20;
             }
         }

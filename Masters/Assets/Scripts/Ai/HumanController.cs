@@ -1,54 +1,39 @@
-﻿using Assets.Shared.Scripts;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Ai
 {
     [RequireComponent(typeof(Avatar))]
     public class HumanController : MonoBehaviour
     {
-        public KeyCode CrouchKeyCode;
+        public KeyCode MoveLeftKeyCode;
+        public KeyCode MoveRightKeyCode;
         public KeyCode JumpKeyCode;
+        public KeyCode BlockKeyCode;
         public KeyCode PunchKeyCode;
-        public KeyCode SpecialAttackA;
-        public KeyCode SpecialAttackB;
-        public KeyCode SpecialAttackC;
+        public KeyCode KickKeyCode;
+        public KeyCode SpecialKeyCode;
 
         private void Update()
         {
-            GetComponent<Avatar>().move( Input.GetAxis("Horizontal"));
-
-            if (Input.GetKey(CrouchKeyCode))
+            var avatar = GetComponent<Avatar>();
+            if (Input.GetKey(MoveLeftKeyCode))
             {
-                GetComponent<Avatar>().crouchDown();
+                avatar.process(Avatar.Command.MoveLeft);
+            }
+            else if (Input.GetKey(MoveRightKeyCode))
+            {
+                avatar.process(Avatar.Command.MoveRight);
             }
             else
             {
-                GetComponent<Avatar>().crouchUp();
+                avatar.process(Avatar.Command.MoveNone);
             }
 
-            if (Input.GetKeyDown(JumpKeyCode))
-            {
-                GetComponent<Avatar>().jump();
-            }
-            if (Input.GetKeyDown(PunchKeyCode))
-            {
-                GetComponent<Avatar>().punch();
-            }
-            if (Input.GetKeyDown(SpecialAttackA))
-            {
-                GetComponent<Avatar>().executeSpecialAttackA();
-                GetComponent<Animator>().SetTrigger("SpecialAttack");
-            }
-            if (Input.GetKeyDown(SpecialAttackB))
-            {
-                GetComponent<Avatar>().executeSpecialAttackB();
-                GetComponent<Animator>().SetTrigger("SpecialAttack");
-            }
-            if (Input.GetKeyDown(SpecialAttackC))
-            {
-                GetComponent<Avatar>().executeSpecialAttackC();
-                GetComponent<Animator>().SetTrigger("SpecialAttack");
-            }
+            if (Input.GetKey(JumpKeyCode)) avatar.process(Avatar.Command.Jump);
+            if (Input.GetKey(BlockKeyCode)) avatar.process(Avatar.Command.Block);
+            if (Input.GetKey(PunchKeyCode)) avatar.process(Avatar.Command.Punch);
+            if (Input.GetKey(KickKeyCode)) avatar.process(Avatar.Command.Kick);
+            if (Input.GetKey(SpecialKeyCode)) avatar.process(Avatar.Command.Special);
         }
     }
 }

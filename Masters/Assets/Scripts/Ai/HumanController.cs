@@ -29,11 +29,11 @@ namespace Assets.Scripts.Ai
                 avatar.process(Avatar.Command.MoveNone);
             }
 
-            if (Input.GetKey(JumpKeyCode)) avatar.process(Avatar.Command.Jump);
-            if (Input.GetKey(BlockKeyCode)) avatar.process(Avatar.Command.Block);
-            if (Input.GetKey(PunchKeyCode)) avatar.process(Avatar.Command.Punch);
-            if (Input.GetKey(KickKeyCode)) avatar.process(Avatar.Command.Kick);
-            if (Input.GetKey(SpecialKeyCode)) avatar.process(Avatar.Command.Special);
+            if (Input.GetKeyDown(JumpKeyCode)) avatar.process(Avatar.Command.Jump);
+            if (Input.GetKeyDown(BlockKeyCode)) avatar.process(Avatar.Command.Block);
+            if (Input.GetKeyDown(PunchKeyCode)) avatar.process(Avatar.Command.Punch);
+            if (Input.GetKeyDown(KickKeyCode)) avatar.process(Avatar.Command.Kick);
+            if (Input.GetKeyDown(SpecialKeyCode)) avatar.process(Avatar.Command.Special);
         }
     }
 }

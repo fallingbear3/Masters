@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Assets.Scripts;
 using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
@@ -19,13 +20,13 @@ public class Avatar : MonoBehaviour
     private Command CurrentDirection;
     private float CurrentDirectionTimeStamp = -1;
     private GameObject other;
+    private float facingDirection;
 
     public float Direction { get; private set; }
     public bool AllowMovement { get; set; }
 
     private void Start()
     {
-        AllowMovement = true;
         tween = GetComponent<Tween>();
         tween.OnTween += OnTween;
         tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
@@ -34,8 +35,9 @@ public class Avatar : MonoBehaviour
         {
             PlayerProfile.HealthBar.OnValueChanged += (value, changed) => 
             {
-                if (changed <= 25)
+                if (changed <= 10)
                 {
+                    iTween.MoveTo(gameObject, new Hashtable { { "x", gameObject .transform.position.x + -5 * facingDirection }, { "time", 0.5f }, { "EaseType", "easeOutQuad" } });				
                     hurt();
                 }
                 else
@@ -46,8 +48,8 @@ public class Avatar : MonoBehaviour
             };
         }
 
-        var player = GameObject.FindGameObjectWithTag("Player");
-        var enemy = GameObject.FindGameObjectWithTag("Enemy");
+        var player = GameObject.FindGameObjectWithTag("asdfasdfads");
+        var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
         other = gameObject == player ? enemy : player;
     }
@@ -111,8 +113,11 @@ public class Avatar : MonoBehaviour
                 }
                 if (command == Command.Special)
                 {
-                    special();
-                    CurrentState = State.Attacking;
+                    if (PlayerProfile.PowerBar.Value == 100)
+                    {
+                        special();
+                        CurrentState = State.Attacking;
+                    }
                 }
                 if (command == Command.Jump)
                 {
@@ -145,7 +150,7 @@ public class Avatar : MonoBehaviour
             }
         }
 
-        var facingDirection = other.transform.position.x - gameObject.transform.position.x;
+        facingDirection = Math.Sign(other.transform.position.x - gameObject.transform.position.x);
         var movingDirection = CurrentDirection == Command.MoveLeft ? -1 : 1;
         switch (CurrentState)
         {
@@ -226,23 +231,16 @@ public class Avatar : MonoBehaviour
     private void move(float speed)
     {
         Direction = Mathf.Sign(speed);
-
-        if (AllowMovement)
-        {
-            transform.AddX(speed*Time.deltaTime);
-        }
+        if (AllowMovement) transform.AddX(speed*Time.deltaTime);
     }
 
     private void special()
     {
-        if (PlayerProfile.PowerBar.Value == 100)
-        {
-            GetComponent<Animator>().SetTrigger("Special");
-            PlayerProfile.PowerBar.Value = 0;
+        GetComponent<Animator>().SetTrigger("Special");
+        PlayerProfile.PowerBar.Value = 0;
 
-            var newAttack = Instantiate(specialAttackPrefab);
-            newAttack.transform.position = transform.position;
-            newAttack.startAttack(this);
-        }
+        var newAttack = Instantiate(specialAttackPrefab);
+        newAttack.transform.position = transform.position;
+        newAttack.startAttack(this);
     }
 }

@@ -61,17 +61,26 @@ public class Avatar : MonoBehaviour
 
     protected enum State
     {
-        Idle, Walking, Running, Jumping, Attacking, Laying
+        Idle, Walking, Running, Jumping, Attacking, Laying, Blocking
     }
 
     public enum Command
     {
-        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch, Kick, Special
+        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch, Kick, Special,
+        NoBlock
     }
     protected State CurrentState { get; private set; }
     
     public void process(Command command)
     {
+        if (CurrentState == State.Blocking)
+        {
+            if (command != Command.NoBlock)
+            {
+                return;
+            }
+        }
+
         if (command == Command.MoveLeft)
         {
             if (CurrentDirection != Command.MoveLeft)
@@ -101,14 +110,15 @@ public class Avatar : MonoBehaviour
             case State.Idle:
             case State.Walking:
             case State.Running:
+            case State.Blocking:
                 if (command == Command.Punch)
                 {
-                    punch();
+                    GetComponent<Animator>().SetTrigger("Punch");
                     CurrentState = State.Attacking;
                 }
                 if (command == Command.Kick)
                 {
-                    kick();
+                           GetComponent<Animator>().SetTrigger("Kick");
                     CurrentState = State.Attacking;
                 }
                 if (command == Command.Special)
@@ -123,10 +133,21 @@ public class Avatar : MonoBehaviour
                 {
                     CurrentState = State.Jumping;
                 }
+                if (command == Command.Block)
+                {
+                    GetComponent<Animator>().SetBool("Block", true);
+                    CurrentState = State.Blocking;
+                }
+                if (command == Command.NoBlock)
+                {
+                    GetComponent<Animator>().SetBool("Block", false);
+                    CurrentState = State.Idle;
+                }
                 break;
             case State.Attacking:
                 // Attack animation or whatever is playing out.
                 break;
+                 
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -134,7 +155,8 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
-        if (CurrentState != State.Attacking)
+
+        if (CurrentState != State.Attacking || CurrentState != State.Blocking)
         {
             if (CurrentDirectionTimeStamp == -1)
             {
@@ -177,11 +199,6 @@ public class Avatar : MonoBehaviour
         }
     }
 
-    private void idle()
-    {
-        GetComponent<Animator>().SetBool("Idle", true);
-    }
-
     private void turnPlayer(float direction)
     {
         transform.localScale = new Vector3(Math.Sign(direction), 1, 1);
@@ -195,25 +212,6 @@ public class Avatar : MonoBehaviour
     private void jump()
     {
         tween.startTween(jumpDuration);
-    }
-
-    private void crouchDown()
-    {
-        GetComponent<Animator>().SetBool("Crouch", true);
-    }
-
-    private void crouchUp()
-    {
-        GetComponent<Animator>().SetBool("Crouch", false);
-    }
-
-    private void punch()
-    {
-        GetComponent<Animator>().SetTrigger("Punch");
-    }
-    private void kick()
-    {
-        GetComponent<Animator>().SetTrigger("Kick");
     }
 
     private void OnTween(float progress, float tweenvalue)

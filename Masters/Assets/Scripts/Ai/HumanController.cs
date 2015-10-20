@@ -29,6 +29,8 @@ namespace Assets.Scripts.Ai
                 avatar.process(Avatar.Command.MoveNone);
             }
 
+            if (Input.GetKeyDown(BlockKeyCode)) avatar.process(Avatar.Command.Block);
+            if (Input.GetKeyUp(BlockKeyCode)) avatar.process(Avatar.Command.NoBlock);
             if (Input.GetKeyDown(JumpKeyCode)) avatar.process(Avatar.Command.Jump);
             if (Input.GetKeyDown(BlockKeyCode)) avatar.process(Avatar.Command.Block);
             if (Input.GetKeyDown(PunchKeyCode)) avatar.process(Avatar.Command.Punch);

@@ -5,7 +5,7 @@ using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
 using UnityEngine;
 
-[RequireComponent(typeof (Animator), typeof (Tween))]
+[RequireComponent(typeof (Animator))]
 public class Avatar : MonoBehaviour
 {
     public float jumpDuration = 1;
@@ -27,36 +27,10 @@ public class Avatar : MonoBehaviour
 
     private void Start()
     {
-        tween = GetComponent<Tween>();
-        tween.OnTween += OnTween;
-        tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
-
-        if (PlayerProfile != null)
-        {
-            PlayerProfile.HealthBar.OnValueChanged += (value, changed) => 
-            {
-                if (changed <= 10)
-                {
-                    iTween.MoveTo(gameObject, new Hashtable { { "x", gameObject .transform.position.x + -5 * facingDirection }, { "time", 0.5f }, { "EaseType", "easeOutQuad" } });				
-                    hurt();
-                }
-                else
-                {
-                    CurrentState = State.Laying;
-                    fall();
-                }
-            };
-        }
-
         var player = GameObject.FindGameObjectWithTag("asdfasdfads");
         var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
         other = gameObject == player ? enemy : player;
-    }
-
-    private void hurt()
-    {
-        GetComponent<Animator>().SetTrigger("Hurt");
     }
 
     protected enum State
@@ -69,6 +43,7 @@ public class Avatar : MonoBehaviour
         MoveLeft, MoveRight, MoveNone, Jump, Block, Punch, Kick, Special,
         NoBlock
     }
+
     protected State CurrentState { get; private set; }
     
     public void process(Command command)
@@ -135,8 +110,8 @@ public class Avatar : MonoBehaviour
                 }
                 if (command == Command.Block)
                 {
-                    GetComponent<Animator>().SetBool("Block", true);
                     CurrentState = State.Blocking;
+                    GetComponent<Animator>().SetBool("Block", true);
                 }
                 if (command == Command.NoBlock)
                 {
@@ -155,8 +130,8 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
-
-        if (CurrentState != State.Attacking || CurrentState != State.Blocking)
+        if (CurrentState == State.Blocking) return;
+        if (CurrentState != State.Attacking)
         {
             if (CurrentDirectionTimeStamp == -1)
             {
@@ -204,26 +179,10 @@ public class Avatar : MonoBehaviour
         transform.localScale = new Vector3(Math.Sign(direction), 1, 1);
     }
 
-    private void fall()
-    {
-        GetComponent<Animator>().SetTrigger("Fall");
-    }
-
-    private void jump()
-    {
-        tween.startTween(jumpDuration);
-    }
-
-    private void OnTween(float progress, float tweenvalue)
-    {
-        transform.SetY(tweenvalue*jumpHeight);
-        GetComponent<Animator>().SetFloat("Jump", progress);
-    }
-
     private void resetState()
     {
         if (CurrentDirectionTimeStamp != -1) CurrentDirectionTimeStamp = Time.time;
-        CurrentState = State.Idle;
+        if(CurrentState!=State.Blocking)CurrentState = State.Idle;
     }
 
     private void move(float speed)
@@ -240,5 +199,42 @@ public class Avatar : MonoBehaviour
         var newAttack = Instantiate(specialAttackPrefab);
         newAttack.transform.position = transform.position;
         newAttack.startAttack(this);
+    }
+
+    public void damage(float damage, Avatar opponent)
+    {
+
+        if (CurrentState == State.Blocking)
+        {
+            PlayerProfile.HealthBar.Value -= damage/5;
+            iTween.MoveTo(gameObject,
+                new Hashtable
+                            {
+                                {"x", gameObject.transform.position.x + -1*facingDirection},
+                                {"time", 0.5f},
+                                {"EaseType", "easeOutQuad"}
+                            });
+        }
+        else
+        {
+            opponent.PlayerProfile.PowerBar.Value += 20;
+            PlayerProfile.HealthBar.Value -= damage;
+            if (damage <= 10)
+            {
+                iTween.MoveTo(gameObject,
+                    new Hashtable
+                            {
+                                {"x", gameObject.transform.position.x + -5*facingDirection},
+                                {"time", 0.5f},
+                                {"EaseType", "easeOutQuad"}
+                            });
+                GetComponent<Animator>().SetTrigger("Hurt");
+            }
+            else
+            {
+                CurrentState = State.Laying;
+                GetComponent<Animator>().SetTrigger("Fall");
+            }
+        }
     }
 }

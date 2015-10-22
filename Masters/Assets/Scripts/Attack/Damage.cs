@@ -12,8 +12,7 @@ namespace Assets.Scripts.Attack
             var avatar = other.gameObject.GetComponent<Avatar>();
             if (avatar && avatar != caster)
             {
-                avatar.PlayerProfile.HealthBar.Value -= damage;
-                caster.PlayerProfile.PowerBar.Value += 20;
+                avatar.damage(damage, caster);
             }
         }
     }

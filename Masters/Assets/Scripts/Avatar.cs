@@ -17,9 +17,9 @@ public class Avatar : MonoBehaviour
     private Tween tween;
 
     public SpecialAttack specialAttackPrefab;
-    private Command CurrentDirection;
+    private Command CurrentDirection = Command.MoveNone;
     private float CurrentDirectionTimeStamp = -1;
-    private GameObject other;
+    public GameObject Opponent { get; private set; }
     private float facingDirection;
 
     public float Direction { get; private set; }
@@ -30,10 +30,10 @@ public class Avatar : MonoBehaviour
         var player = GameObject.FindGameObjectWithTag("asdfasdfads");
         var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
-        other = gameObject == player ? enemy : player;
+        Opponent = gameObject == player ? enemy : player;
     }
 
-    protected enum State
+    public enum State
     {
         Idle, Walking, Running, Jumping, Attacking, Laying, Blocking
     }
@@ -44,7 +44,7 @@ public class Avatar : MonoBehaviour
         NoBlock
     }
 
-    protected State CurrentState { get; private set; }
+    public State CurrentState { get; private set; }
     
     public void process(Command command)
     {
@@ -122,15 +122,15 @@ public class Avatar : MonoBehaviour
             case State.Attacking:
                 // Attack animation or whatever is playing out.
                 break;
-                 
-            default:
-                throw new ArgumentOutOfRangeException();
         }
     }
 
     private void Update()
     {
-        if (CurrentState == State.Blocking) return;
+        facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
+        var movingDirection = CurrentDirection == Command.MoveLeft ? -1 : 1;
+
+        if (CurrentState == State.Blocking || CurrentState == State.Laying) return;
         if (CurrentState != State.Attacking)
         {
             if (CurrentDirectionTimeStamp == -1)
@@ -146,9 +146,6 @@ public class Avatar : MonoBehaviour
                 CurrentState = State.Walking;
             }
         }
-
-        facingDirection = Math.Sign(other.transform.position.x - gameObject.transform.position.x);
-        var movingDirection = CurrentDirection == Command.MoveLeft ? -1 : 1;
         switch (CurrentState)
         {
             case State.Idle:
@@ -211,7 +208,7 @@ public class Avatar : MonoBehaviour
                 new Hashtable
                             {
                                 {"x", gameObject.transform.position.x + -1*facingDirection},
-                                {"time", 0.5f},
+                                {"time", 0.25f},
                                 {"EaseType", "easeOutQuad"}
                             });
         }
@@ -225,7 +222,7 @@ public class Avatar : MonoBehaviour
                     new Hashtable
                             {
                                 {"x", gameObject.transform.position.x + -5*facingDirection},
-                                {"time", 0.5f},
+                                {"time", 0.25f},
                                 {"EaseType", "easeOutQuad"}
                             });
                 GetComponent<Animator>().SetTrigger("Hurt");
@@ -235,6 +232,12 @@ public class Avatar : MonoBehaviour
                 CurrentState = State.Laying;
                 GetComponent<Animator>().SetTrigger("Fall");
             }
+        }
+
+        if (PlayerProfile.HealthBar.Value == 0)
+        {
+            GetComponent<Animator>().SetTrigger("Die");
+            GetComponent<BoxCollider2D>().enabled = false;
         }
     }
 }

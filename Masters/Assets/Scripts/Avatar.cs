@@ -21,6 +21,8 @@ public class Avatar : MonoBehaviour
     private float CurrentDirectionTimeStamp = -1;
     public GameObject Opponent { get; private set; }
     private float facingDirection;
+    private GameObject jumpHelper;
+    private State _currentState;
 
     public float Direction { get; private set; }
     public bool AllowMovement { get; set; }
@@ -31,6 +33,7 @@ public class Avatar : MonoBehaviour
         var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
         Opponent = gameObject == player ? enemy : player;
+        jumpHelper = new GameObject("JumpHelper");
     }
 
     public enum State
@@ -44,10 +47,15 @@ public class Avatar : MonoBehaviour
         NoBlock
     }
 
-    public State CurrentState { get; private set; }
-    
+    public State CurrentState
+    {
+        get { return _currentState; }
+        private set { _currentState = value; }
+    }
+
     public void process(Command command)
     {
+        gameObject.transform.SetY(jumpHelper.transform.position.y);
         if (CurrentState == State.Blocking)
         {
             if (command != Command.NoBlock)
@@ -78,6 +86,22 @@ public class Avatar : MonoBehaviour
         {
             CurrentDirection = Command.MoveNone;
             CurrentDirectionTimeStamp = -1;
+        }
+
+        if (command == Command.Jump && CurrentState!= State.Jumping)
+        {
+
+            iTween.MoveTo(jumpHelper,
+                new Hashtable
+                            {
+                                {"y", jumpHelper.transform.position.y + 10},
+                                {"time", 0.5f},
+                                {"EaseType", "easeInOutCubic"},
+                                {"oncomplete", "jumpDown"},
+                                {"oncompletetarget", gameObject }
+                            });
+            CurrentState = State.Jumping;
+            GetComponent<Animator>().SetTrigger("JumpUp");
         }
 
         switch (CurrentState)
@@ -125,13 +149,45 @@ public class Avatar : MonoBehaviour
         }
     }
 
+    private void jumpDown()
+    {
+        iTween.MoveTo(jumpHelper,
+             new Hashtable
+                            {
+                                {"y", jumpHelper.transform.position.y - 10},
+                                {"time", 0.5f},
+                                {"EaseType", "easeInCubic"},
+                                {"oncomplete", "jumpExit"},
+                                {"oncompletetarget", gameObject }
+                            });
+        GetComponent<Animator>().SetTrigger("JumpDown");
+    }
+
+    private void jumpExit()
+    {
+        GetComponent<Animator>().SetTrigger("JumpExit");
+    }
+
     private void Update()
     {
         facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
-        var movingDirection = CurrentDirection == Command.MoveLeft ? -1 : 1;
+        int movingDirection = 0;
+        if (CurrentDirection == Command.MoveLeft)
+        {
+            movingDirection = -1;
+        }
+        else if (CurrentDirection == Command.MoveRight)
+        {
+            movingDirection = 1;
+        }
+        else if (CurrentDirection == Command.MoveNone)
+        {
+            movingDirection = 0;
+            
+        }
 
         if (CurrentState == State.Blocking || CurrentState == State.Laying) return;
-        if (CurrentState != State.Attacking)
+        if (CurrentState != State.Attacking && CurrentState != State.Jumping)
         {
             if (CurrentDirectionTimeStamp == -1)
             {
@@ -162,6 +218,10 @@ public class Avatar : MonoBehaviour
                 move(movingDirection*runningSpeed);
                 GetComponent<Animator>().SetFloat("Speed", 2);
                 break;
+                case State.Jumping:
+                if (movingDirection != 0) turnPlayer(movingDirection);
+                move(movingDirection*runningSpeed);
+                break;
             case State.Attacking:
                 turnPlayer(facingDirection);
                 break;
@@ -185,7 +245,10 @@ public class Avatar : MonoBehaviour
     private void move(float speed)
     {
         Direction = Mathf.Sign(speed);
-        if (AllowMovement) transform.AddX(speed*Time.deltaTime);
+        if (AllowMovement)
+        {
+            transform.AddX(speed*Time.deltaTime);
+        }
     }
 
     private void special()

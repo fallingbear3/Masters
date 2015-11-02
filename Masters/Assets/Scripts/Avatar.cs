@@ -24,6 +24,7 @@ public class Avatar : MonoBehaviour
     private float facingDirection;
     private GameObject jumpHelper;
     private State _currentState;
+    private bool enableRunning = true;
 
     public float Direction { get; private set; }
     public bool AllowMovement { get; set; }
@@ -194,7 +195,7 @@ public class Avatar : MonoBehaviour
             {
                 CurrentState = State.Idle;
             }
-            else if (Time.time - CurrentDirectionTimeStamp > 0.5f)
+            else if (Time.time - CurrentDirectionTimeStamp > 0.5f && enableRunning)
             {
                 CurrentState = State.Running;
             }
@@ -307,5 +308,10 @@ public class Avatar : MonoBehaviour
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<BoxCollider2D>().enabled = false;
         }
+    }
+
+    public void disableRunning()
+    {
+        enableRunning = false;
     }
 }

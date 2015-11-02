@@ -11,6 +11,7 @@ public class Avatar : MonoBehaviour
     public float jumpDuration = 1;
     public float jumpHeight = 10;
     public float walkingSpead = 12.5f;
+    public float jumpingSpeed = 19;
     public float runningSpeed = 25;
     public float speed = 15;
     public PlayerProfile PlayerProfile;
@@ -94,9 +95,9 @@ public class Avatar : MonoBehaviour
             iTween.MoveTo(jumpHelper,
                 new Hashtable
                             {
-                                {"y", jumpHelper.transform.position.y + 10},
+                                {"y",  10},
                                 {"time", 0.5f},
-                                {"EaseType", "easeInOutCubic"},
+                                {"EaseType", "easeOutCubic"},
                                 {"oncomplete", "jumpDown"},
                                 {"oncompletetarget", gameObject }
                             });
@@ -154,7 +155,7 @@ public class Avatar : MonoBehaviour
         iTween.MoveTo(jumpHelper,
              new Hashtable
                             {
-                                {"y", jumpHelper.transform.position.y - 10},
+                                {"y", 0},
                                 {"time", 0.5f},
                                 {"EaseType", "easeInCubic"},
                                 {"oncomplete", "jumpExit"},
@@ -220,7 +221,7 @@ public class Avatar : MonoBehaviour
                 break;
                 case State.Jumping:
                 if (movingDirection != 0) turnPlayer(movingDirection);
-                move(movingDirection*runningSpeed);
+                move(movingDirection * jumpingSpeed);
                 break;
             case State.Attacking:
                 turnPlayer(facingDirection);
@@ -245,7 +246,7 @@ public class Avatar : MonoBehaviour
     private void move(float speed)
     {
         Direction = Mathf.Sign(speed);
-        if (AllowMovement)
+        if (AllowMovement || CurrentState == State.Jumping)
         {
             transform.AddX(speed*Time.deltaTime);
         }
@@ -275,7 +276,11 @@ public class Avatar : MonoBehaviour
                                 {"EaseType", "easeOutQuad"}
                             });
         }
-        else
+        else if (CurrentState == State.Jumping)
+        {
+            //TODO fix this avatar should fall down
+        }
+        else 
         {
             opponent.PlayerProfile.PowerBar.Value += 20;
             PlayerProfile.HealthBar.Value -= damage;

@@ -13,7 +13,7 @@ namespace Assets.Scripts
         private float step;
         private float value;
 
-        public delegate void OnChangedHandler(float value);
+        public delegate void OnChangedHandler(float value, float changed);
 
         public event OnChangedHandler OnValueChanged;
 
@@ -22,9 +22,10 @@ namespace Assets.Scripts
             get { return value; }
             set
             {
+                var dif = value - this.value;
                 this.value = Mathf.Clamp(value, 0, max);
                 updateUi(this.value);
-                if (OnValueChanged != null) OnValueChanged(value);
+                if (OnValueChanged != null) OnValueChanged(value, dif);
             }
         }
 

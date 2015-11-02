@@ -1,127 +1,306 @@
 ﻿using System;
+using System.Collections;
 using Assets.Scripts;
 using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
 using UnityEngine;
 
-[RequireComponent(typeof (Animator), typeof (Tween))]
+[RequireComponent(typeof (Animator))]
 public class Avatar : MonoBehaviour
 {
     public float jumpDuration = 1;
     public float jumpHeight = 10;
+    public float walkingSpead = 12.5f;
+    public float runningSpeed = 25;
     public float speed = 15;
     public PlayerProfile PlayerProfile;
     private Tween tween;
 
-    public SpecialAttack specialAttackPrefabA;
-    public SpecialAttack specialAttackPrefabB;
-    public SpecialAttack specialAttackPrefabC;
+    public SpecialAttack specialAttackPrefab;
+    private Command CurrentDirection = Command.MoveNone;
+    private float CurrentDirectionTimeStamp = -1;
+    public GameObject Opponent { get; private set; }
+    private float facingDirection;
+    private GameObject jumpHelper;
+    private State _currentState;
 
     public float Direction { get; private set; }
     public bool AllowMovement { get; set; }
 
     private void Start()
     {
-        AllowMovement = true;
-        tween = GetComponent<Tween>();
-        tween.OnTween += OnTween;
-        tween.OnFinish += () => GetComponent<Animator>().SetFloat("Jump", 0);
+        var player = GameObject.FindGameObjectWithTag("asdfasdfads");
+        var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
-        if (PlayerProfile != null)
+        Opponent = gameObject == player ? enemy : player;
+        jumpHelper = new GameObject("JumpHelper");
+    }
+
+    public enum State
+    {
+        Idle, Walking, Running, Jumping, Attacking, Laying, Blocking
+    }
+
+    public enum Command
+    {
+        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch, Kick, Special,
+        NoBlock
+    }
+
+    public State CurrentState
+    {
+        get { return _currentState; }
+        private set { _currentState = value; }
+    }
+
+    public void process(Command command)
+    {
+        gameObject.transform.SetY(jumpHelper.transform.position.y);
+        if (CurrentState == State.Blocking)
         {
-            PlayerProfile.HealthBar.OnValueChanged += value =>
+            if (command != Command.NoBlock)
             {
-                if (value == 5)
+                return;
+            }
+        }
+
+        if (command == Command.MoveLeft)
+        {
+            if (CurrentDirection != Command.MoveLeft)
+            {
+                CurrentDirection = Command.MoveLeft;
+                CurrentDirectionTimeStamp = Time.time;
+            }
+        }
+        
+        if (command == Command.MoveRight)
+        {
+            if (CurrentDirection != Command.MoveRight)
+            {
+                CurrentDirection = Command.MoveRight;
+                CurrentDirectionTimeStamp = Time.time;
+            }
+        }
+        
+        if (command == Command.MoveNone)
+        {
+            CurrentDirection = Command.MoveNone;
+            CurrentDirectionTimeStamp = -1;
+        }
+
+        if (command == Command.Jump && CurrentState!= State.Jumping)
+        {
+
+            iTween.MoveTo(jumpHelper,
+                new Hashtable
+                            {
+                                {"y", jumpHelper.transform.position.y + 10},
+                                {"time", 0.5f},
+                                {"EaseType", "easeInOutCubic"},
+                                {"oncomplete", "jumpDown"},
+                                {"oncompletetarget", gameObject }
+                            });
+            CurrentState = State.Jumping;
+            GetComponent<Animator>().SetTrigger("JumpUp");
+        }
+
+        switch (CurrentState)
+        {
+            case State.Idle:
+            case State.Walking:
+            case State.Running:
+            case State.Blocking:
+                if (command == Command.Punch)
                 {
-                    //TODO fix
-                    // fall();
+                    GetComponent<Animator>().SetTrigger("Punch");
+                    CurrentState = State.Attacking;
                 }
-            };
+                if (command == Command.Kick)
+                {
+                           GetComponent<Animator>().SetTrigger("Kick");
+                    CurrentState = State.Attacking;
+                }
+                if (command == Command.Special)
+                {
+                    if (PlayerProfile.PowerBar.Value == 100)
+                    {
+                        special();
+                        CurrentState = State.Attacking;
+                    }
+                }
+                if (command == Command.Jump)
+                {
+                    CurrentState = State.Jumping;
+                }
+                if (command == Command.Block)
+                {
+                    CurrentState = State.Blocking;
+                    GetComponent<Animator>().SetBool("Block", true);
+                }
+                if (command == Command.NoBlock)
+                {
+                    GetComponent<Animator>().SetBool("Block", false);
+                    CurrentState = State.Idle;
+                }
+                break;
+            case State.Attacking:
+                // Attack animation or whatever is playing out.
+                break;
         }
     }
 
-    private void fall()
+    private void jumpDown()
     {
-        GetComponent<Animator>().SetTrigger("Fall");
+        iTween.MoveTo(jumpHelper,
+             new Hashtable
+                            {
+                                {"y", jumpHelper.transform.position.y - 10},
+                                {"time", 0.5f},
+                                {"EaseType", "easeInCubic"},
+                                {"oncomplete", "jumpExit"},
+                                {"oncompletetarget", gameObject }
+                            });
+        GetComponent<Animator>().SetTrigger("JumpDown");
     }
 
-    public void musicWave()
+    private void jumpExit()
     {
-        GetComponent<MusicWave>().execute();
+        GetComponent<Animator>().SetTrigger("JumpExit");
     }
 
-    public void jump()
+    private void Update()
     {
-        tween.startTween(jumpDuration);
+        facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
+        int movingDirection = 0;
+        if (CurrentDirection == Command.MoveLeft)
+        {
+            movingDirection = -1;
+        }
+        else if (CurrentDirection == Command.MoveRight)
+        {
+            movingDirection = 1;
+        }
+        else if (CurrentDirection == Command.MoveNone)
+        {
+            movingDirection = 0;
+            
+        }
+
+        if (CurrentState == State.Blocking || CurrentState == State.Laying) return;
+        if (CurrentState != State.Attacking && CurrentState != State.Jumping)
+        {
+            if (CurrentDirectionTimeStamp == -1)
+            {
+                CurrentState = State.Idle;
+            }
+            else if (Time.time - CurrentDirectionTimeStamp > 0.5f)
+            {
+                CurrentState = State.Running;
+            }
+            else
+            {
+                CurrentState = State.Walking;
+            }
+        }
+        switch (CurrentState)
+        {
+            case State.Idle:
+                turnPlayer(facingDirection);
+                GetComponent<Animator>().SetFloat("Speed", 0);
+                break;
+            case State.Walking:
+                turnPlayer(facingDirection);
+                move(movingDirection*walkingSpead);
+                GetComponent<Animator>().SetFloat("Speed", 1);
+                break;
+            case State.Running:
+                turnPlayer(movingDirection);
+                move(movingDirection*runningSpeed);
+                GetComponent<Animator>().SetFloat("Speed", 2);
+                break;
+                case State.Jumping:
+                if (movingDirection != 0) turnPlayer(movingDirection);
+                move(movingDirection*runningSpeed);
+                break;
+            case State.Attacking:
+                turnPlayer(facingDirection);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 
-    public void crouchDown()
+    private void turnPlayer(float direction)
     {
-        GetComponent<Animator>().SetBool("Crouch", true);
+        transform.localScale = new Vector3(Math.Sign(direction), 1, 1);
     }
 
-    public void crouchUp()
+    private void resetState()
     {
-        GetComponent<Animator>().SetBool("Crouch", false);
+        if (CurrentDirectionTimeStamp != -1) CurrentDirectionTimeStamp = Time.time;
+        if(CurrentState!=State.Blocking)CurrentState = State.Idle;
     }
 
-    public void punch()
+    private void move(float speed)
     {
-        GetComponent<Animator>().SetTrigger("Punch");
-    }
-
-    private void OnTween(float progress, float tweenvalue)
-    {
-        transform.SetY(tweenvalue*jumpHeight);
-        GetComponent<Animator>().SetFloat("Jump", progress);
-    }
-
-    public void move(float direction)
-    {
-        Direction = direction;
-        GetComponent<Animator>().SetFloat("Speed", speed * Math.Abs(direction));
-
+        Direction = Mathf.Sign(speed);
         if (AllowMovement)
         {
-            transform.AddX(speed*direction*Time.deltaTime);
-            if (direction < 0)
-            {
-                transform.localScale = Vector3.one.Multiply(new Vector3(-1, 1, 1));
-            }
-            if (direction > 0)
-            {
-                transform.localScale = Vector3.one.Multiply(new Vector3(1, 1, 1));
-            }
+            transform.AddX(speed*Time.deltaTime);
         }
     }
 
-    public void executeSpecialAttackA()
+    private void special()
     {
-        executeSpecialAttack(specialAttackPrefabA);
-    }
-    public void executeSpecialAttackB()
-    {
-        executeSpecialAttack(specialAttackPrefabB);
-    }
-    public void executeSpecialAttackC()
-    {
-        executeSpecialAttack(specialAttackPrefabC);
+        GetComponent<Animator>().SetTrigger("Special");
+        PlayerProfile.PowerBar.Value = 0;
+
+        var newAttack = Instantiate(specialAttackPrefab);
+        newAttack.transform.position = transform.position;
+        newAttack.startAttack(this);
     }
 
-    private void executeSpecialAttack(SpecialAttack specialAttack)
+    public void damage(float damage, Avatar opponent)
     {
-        if (PlayerProfile.PowerBar.Value == 100)
+
+        if (CurrentState == State.Blocking)
         {
-            PlayerProfile.PowerBar.Value = 0;
-
-            var newAttack = Instantiate(specialAttack);
-            newAttack.transform.position = transform.position;
-            newAttack.startAttack(this);
+            PlayerProfile.HealthBar.Value -= damage/5;
+            iTween.MoveTo(gameObject,
+                new Hashtable
+                            {
+                                {"x", gameObject.transform.position.x + -1*facingDirection},
+                                {"time", 0.25f},
+                                {"EaseType", "easeOutQuad"}
+                            });
         }
-    }
+        else
+        {
+            opponent.PlayerProfile.PowerBar.Value += 20;
+            PlayerProfile.HealthBar.Value -= damage;
+            if (damage <= 10)
+            {
+                iTween.MoveTo(gameObject,
+                    new Hashtable
+                            {
+                                {"x", gameObject.transform.position.x + -5*facingDirection},
+                                {"time", 0.25f},
+                                {"EaseType", "easeOutQuad"}
+                            });
+                GetComponent<Animator>().SetTrigger("Hurt");
+            }
+            else
+            {
+                CurrentState = State.Laying;
+                GetComponent<Animator>().SetTrigger("Fall");
+            }
+        }
 
-    public void takeDamage()
-    {
-        GetComponent<Animator>().SetTrigger("TakeDamage");
+        if (PlayerProfile.HealthBar.Value == 0)
+        {
+            GetComponent<Animator>().SetTrigger("Die");
+            GetComponent<BoxCollider2D>().enabled = false;
+        }
     }
 }

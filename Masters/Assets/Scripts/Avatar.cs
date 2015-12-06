@@ -55,8 +55,11 @@ public class Avatar : MonoBehaviour
         private set { _currentState = value; }
     }
 
+    public bool Active { get; set; }
+
     public void process(Command command)
     {
+        if (!Active) return;
         gameObject.transform.SetY(jumpHelper.transform.position.y);
         if (CurrentState == State.Blocking)
         {
@@ -172,6 +175,7 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
+        if (Opponent == null) return;
         facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
         int movingDirection = 0;
         if (CurrentDirection == Command.MoveLeft)

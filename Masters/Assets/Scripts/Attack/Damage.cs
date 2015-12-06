@@ -5,6 +5,7 @@ namespace Assets.Scripts.Attack
     public class Damage : MonoBehaviour
     {
         public Avatar caster;
+        public AudioSource punchSound;
         public float damage;
 
         public void OnTriggerEnter2D(Collider2D other)
@@ -13,6 +14,7 @@ namespace Assets.Scripts.Attack
             if (avatar && avatar != caster)
             {
                 avatar.damage(damage, caster);
+                punchSound.Play();
             }
         }
     }

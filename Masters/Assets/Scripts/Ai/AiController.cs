@@ -8,7 +8,7 @@ namespace Assets.Scripts.Ai
     public class AiController : MonoBehaviour
     {
         private const int ATTACKING_DISTANCE = 7;
-        private const float reflexes = 1.5f;
+        private const float reflexes = 0.55f;
         private Avatar avatar;
         private Avatar avatarOpponent;
         private bool flee;

@@ -1,12 +1,13 @@
-﻿using Shared.Scripts;
+﻿using System.Linq;
+using Shared.Scripts;
 using UnityEngine;
 
 namespace DefaultNamespace
 {
     public class SetupFight : MonoBehaviour
     {
-
         public FighterTypes playerType;
+
         public GameObject player;
         public GameObject enemy;
 
@@ -14,6 +15,9 @@ namespace DefaultNamespace
         {
             player.GetComponentInChildren<SuitUp>().FighterType = playerType;
             enemy.GetComponentInChildren<SuitUp>().FighterType = FighterTypes.Rocc;
+
+            player.GetComponentInChildren<Avatar>().PlayerProfile.Profile.sprite =
+                Resources.LoadAll<Sprite>("Profiles").First(sprite => sprite.name == playerType.ToString());
         }
     }
 }

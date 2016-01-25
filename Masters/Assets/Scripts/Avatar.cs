@@ -17,7 +17,6 @@ public class Avatar : MonoBehaviour
     public PlayerProfile PlayerProfile;
     private Tween tween;
 
-    public SpecialAttack specialAttackPrefab;
     private Command CurrentDirection = Command.MoveNone;
     private float CurrentDirectionTimeStamp = -1;
     public GameObject Opponent { get; private set; }
@@ -45,7 +44,7 @@ public class Avatar : MonoBehaviour
 
     public enum Command
     {
-        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch, Kick, Special,
+        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch,  
         NoBlock
     }
 
@@ -119,19 +118,6 @@ public class Avatar : MonoBehaviour
                 {
                     GetComponent<Animator>().SetTrigger("Punch");
                     CurrentState = State.Attacking;
-                }
-                if (command == Command.Kick)
-                {
-                           GetComponent<Animator>().SetTrigger("Kick");
-                    CurrentState = State.Attacking;
-                }
-                if (command == Command.Special)
-                {
-                    if (PlayerProfile.PowerBar.Value == 100)
-                    {
-                        special();
-                        CurrentState = State.Attacking;
-                    }
                 }
                 if (command == Command.Jump)
                 {
@@ -257,16 +243,6 @@ public class Avatar : MonoBehaviour
         }
     }
 
-    private void special()
-    {
-        GetComponent<Animator>().SetTrigger("Special");
-        PlayerProfile.PowerBar.Value = 0;
-
-        var newAttack = Instantiate(specialAttackPrefab);
-        newAttack.transform.position = transform.position;
-        newAttack.startAttack(this);
-    }
-
     public void damage(float damage, Avatar opponent)
     {
 
@@ -287,7 +263,6 @@ public class Avatar : MonoBehaviour
         }
         else 
         {
-            opponent.PlayerProfile.PowerBar.Value += 20;
             PlayerProfile.HealthBar.Value -= damage;
             if (damage <= 10)
             {

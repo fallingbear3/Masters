@@ -34,8 +34,6 @@ namespace Assets.Scripts.Ai
             if (Input.GetKeyDown(JumpKeyCode)) avatar.process(Avatar.Command.Jump);
             if (Input.GetKeyDown(BlockKeyCode)) avatar.process(Avatar.Command.Block);
             if (Input.GetKeyDown(PunchKeyCode)) avatar.process(Avatar.Command.Punch);
-            if (Input.GetKeyDown(KickKeyCode)) avatar.process(Avatar.Command.Kick);
-            if (Input.GetKeyDown(SpecialKeyCode)) avatar.process(Avatar.Command.Special);
         }
     }
 }

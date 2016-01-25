@@ -8,6 +8,7 @@ namespace Assets.Scripts.Ai
     public class AiController : MonoBehaviour
     {
         private const int ATTACKING_DISTANCE = 7;
+        private const float reflexes = 1.5f;
         private Avatar avatar;
         private Avatar avatarOpponent;
         private bool flee;
@@ -27,12 +28,6 @@ namespace Assets.Scripts.Ai
             if (avatar.CurrentState == Avatar.State.Blocking)
             {
                 process(Avatar.Command.NoBlock);
-            }
-
-            if (avatar.PlayerProfile.PowerBar.Value == 100)
-            {
-                process(Avatar.Command.Special);
-                return;
             }
 
             var distance = avatar.Opponent.transform.position.Distance(avatar.transform.position);
@@ -99,8 +94,8 @@ namespace Assets.Scripts.Ai
 
         private void process(Avatar.Command command)
         {
-            waitTo = Time.time + 0.5f;
-            process(command, 0.5f);
+            waitTo = Time.time + reflexes;
+            process(command, reflexes);
         }
     }
 }

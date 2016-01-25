@@ -2,6 +2,10 @@
 {
     public enum FighterTypes
     {
-        Janacek, Wagner, Martinu, Rocc
+        Janacek,
+        Wagner,
+        Martinu,
+        Strauss,
+        Rocc
     }
 }

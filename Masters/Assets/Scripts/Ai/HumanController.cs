@@ -10,8 +10,6 @@ namespace Assets.Scripts.Ai
         public KeyCode JumpKeyCode;
         public KeyCode BlockKeyCode;
         public KeyCode PunchKeyCode;
-        public KeyCode KickKeyCode;
-        public KeyCode SpecialKeyCode;
 
         private void Update()
         {

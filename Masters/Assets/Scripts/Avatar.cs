@@ -39,7 +39,7 @@ public class Avatar : MonoBehaviour
 
     public enum State
     {
-        Idle, Walking, Running, Jumping, Attacking, Laying, Blocking
+        Idle, Walking, Running, Jumping, Attacking, Laying, Blocking, Dead
     }
 
     public enum Command
@@ -58,7 +58,7 @@ public class Avatar : MonoBehaviour
 
     public void process(Command command)
     {
-        if (!Active) return;
+        if (!Active || CurrentState == State.Dead) return;
         gameObject.transform.SetY(jumpHelper.transform.position.y);
         if (CurrentState == State.Blocking)
         {
@@ -161,7 +161,7 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
-        if (Opponent == null) return;
+        if (Opponent == null || CurrentState == State.Dead) return;
         facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
         int movingDirection = 0;
         if (CurrentDirection == Command.MoveLeft)
@@ -245,7 +245,7 @@ public class Avatar : MonoBehaviour
 
     public void damage(float damage, Avatar opponent)
     {
-
+        if (CurrentState == State.Dead) return;
         if (CurrentState == State.Blocking)
         {
             PlayerProfile.HealthBar.Value -= damage/5;
@@ -284,6 +284,7 @@ public class Avatar : MonoBehaviour
 
         if (PlayerProfile.HealthBar.Value == 0)
         {
+            CurrentState = State.Dead;
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<BoxCollider2D>().enabled = false;
         }

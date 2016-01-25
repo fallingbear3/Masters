@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 1fc81904f5acef94baa03c6f1fe248ef
-timeCreated: 1453677487
+timeCreated: 1453760399
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
@@ -11,13 +11,14 @@ TextureImporter:
     21300008: elbow
     21300010: Torso_0
     21300012: Torso_1
-    21300014: forearm
+    21300014: forearm_0
     21300016: shoe_rigth
     21300018: thigh
     21300020: knee
     21300022: shoe_left
     21300024: shin
     21300026: shoe_left_alt
+    21300028: forearm_1
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -105,35 +106,6 @@ TextureImporter:
         - {x: 64.5, y: -92}
         - {x: 75.5, y: -49}
         - {x: 81.5, y: 28}
-    - name: janecek_3
-      rect:
-        serializedVersion: 2
-        x: 23
-        y: 413
-        width: 145
-        height: 384
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 72.5, y: 130}
-        - {x: 66.5, y: 147}
-        - {x: 48.5, y: 180}
-        - {x: 35.5, y: 192}
-        - {x: 2.5, y: 192}
-        - {x: -1.5, y: 191}
-        - {x: -26.5, y: 171}
-        - {x: -63.5, y: 82}
-        - {x: -67.5, y: 46}
-        - {x: -72.5, y: -18}
-        - {x: -72.5, y: -98}
-        - {x: -59.5, y: -123}
-        - {x: -35.5, y: -187}
-        - {x: -30.5, y: -192}
-        - {x: 43.5, y: -192}
-        - {x: 55.5, y: -180}
-        - {x: 64.5, y: -142}
-        - {x: 72.5, y: -92}
     - name: elbow
       rect:
         serializedVersion: 2
@@ -258,7 +230,7 @@ TextureImporter:
         - {x: -41.5, y: -206.5}
         - {x: 25.5, y: -202.5}
         - {x: 75.5, y: -200.5}
-    - name: forearm
+    - name: forearm_0
       rect:
         serializedVersion: 2
         x: 228
@@ -400,6 +372,27 @@ TextureImporter:
         - {x: 66.811035, y: -30.610199}
         - {x: 66.811035, y: -25.610199}
         - {x: 59.811035, y: -25.610199}
+    - name: forearm_1
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 440
+        width: 143
+        height: 206
+      alignment: 9
+      pivot: {x: 0.49999994, y: 1.0028076}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -69.49999, y: -0.57836914}
+        - {x: -71.49999, y: -36.57837}
+        - {x: -71.49999, y: -115.57837}
+        - {x: -58.499992, y: -137.57837}
+        - {x: -34.499992, y: -201.57837}
+        - {x: -29.499992, y: -206.57837}
+        - {x: 45.500008, y: -206.57837}
+        - {x: 58.500008, y: -196.57837}
+        - {x: 71.50001, y: -127.57837}
+        - {x: 71.50001, y: -0.57836914}
     outline: []
   spritePackingTag: 
   userData: 

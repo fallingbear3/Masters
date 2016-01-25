@@ -14,7 +14,7 @@ namespace Assets.Scripts.Attack
             if (avatar && avatar != caster)
             {
                 avatar.damage(damage, caster);
-                punchSound.Play();
+                if(punchSound!=null)punchSound.Play();
             }
         }
     }

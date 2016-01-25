@@ -5,23 +5,31 @@ namespace Assets.Scripts
     public class NavigationManager : MonoBehaviour
     {
 
+        public GameObject menuSceen;
+        public GameObject howToPlayScreen;
         public GameObject fightScreen;
-        public GameObject avatar;
+
+        private GameObject[] allScenes;
 
         private void Start()
         {
-            fightScreen.SetActive(false);
+            allScenes = new[] {menuSceen, howToPlayScreen, fightScreen};
+            setScene(menuSceen);
+
+            Invoke("howToPlay", 5);
         }
 
-        public void fight()
+        private void setScene(GameObject newScene)
         {
-            avatar.SetActive(false);
-            fightScreen.SetActive(true);
+            foreach (var scene in allScenes)
+            {
+                scene.SetActive(scene == newScene);
+            }
         }
-        public void menu()
+
+        private void howToPlay()
         {
-            avatar.SetActive(true);
-            fightScreen.SetActive(false);
+            setScene(howToPlayScreen);
         }
     }
 }

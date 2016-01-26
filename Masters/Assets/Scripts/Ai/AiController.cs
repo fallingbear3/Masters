@@ -97,5 +97,10 @@ namespace Assets.Scripts.Ai
             waitTo = Time.time + reflexes;
             process(command, reflexes);
         }
+
+        public void Restart()
+        {
+            flee = false;
+        }
     }
 }

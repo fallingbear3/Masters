@@ -49,6 +49,11 @@ namespace Assets.Scripts
             Value = max;
         }
 
+        public int CurrentLives
+        {
+            get { return livesBar.transform.childCount; }
+        }
+
         private void Start()
         {
             maxBarSize = bar.sizeDelta.x;

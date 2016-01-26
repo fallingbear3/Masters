@@ -25,7 +25,6 @@ public class Avatar : MonoBehaviour
     public GameObject Opponent { get; private set; }
     private float facingDirection;
     private GameObject jumpHelper;
-    private State _currentState;
     private bool enableRunning = true;
     private SetupFight setupFight;
     private GameObject player;
@@ -56,11 +55,7 @@ public class Avatar : MonoBehaviour
         NoBlock
     }
 
-    public State CurrentState
-    {
-        get { return _currentState; }
-        private set { _currentState = value; }
-    }
+    public State CurrentState { get; private set; }
 
     public bool Active { get; set; }
 
@@ -68,8 +63,10 @@ public class Avatar : MonoBehaviour
     {
         positionPlayer();
         CurrentState = State.Idle;
-        GetComponent<Animator>().SetTrigger("Ressurect");
-    }
+    CurrentDirectionTimeStamp = -1;
+    GetComponent<Animator>().SetTrigger("Ressurect");
+    CurrentDirection = Command.MoveNone;
+}
 
     private void positionPlayer()
     {
@@ -309,10 +306,15 @@ public class Avatar : MonoBehaviour
             GetComponent<BoxCollider2D>().enabled = false;
 
             PlayerProfile.HealthBar.RemoveHeath();
-            PlayerProfile.HealthBar.ResetHealth();
-            setupFight.restartScene();
-
-            //setupFight.fightEnd(gameObject == enemy);
+            if (PlayerProfile.HealthBar.CurrentLives > 0)
+            {
+                PlayerProfile.HealthBar.ResetHealth();
+                setupFight.restartScene();
+            }
+            else
+            {
+                setupFight.fightEnd(gameObject == enemy);
+            }
         }
     }
 

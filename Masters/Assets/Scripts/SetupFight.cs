@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Assets.Scripts.Ai;
 using Assets.Scripts.model;
 using Shared.Scripts;
 using UnityEngine;
@@ -77,6 +78,7 @@ namespace DefaultNamespace
             enemy.Active = false;
             player.Restart();
             enemy.Restart();
+            enemy.GetComponent<AiController>().Restart();
             GetComponent<Animator>().SetTrigger("Start");
         }
     }

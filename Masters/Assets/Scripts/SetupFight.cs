@@ -50,6 +50,7 @@ namespace DefaultNamespace
                 }
                 else
                 {
+                    repo.FighterType = Fighter.Type.Janacek;
                     EndGame();
                 }
             }

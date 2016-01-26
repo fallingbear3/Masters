@@ -19,7 +19,7 @@ namespace Assets.Scripts.model
 
         private void Awake()
         {
-            PlayerPrefs.DeleteAll();
+           // PlayerPrefs.DeleteAll();
         }
     }
 }

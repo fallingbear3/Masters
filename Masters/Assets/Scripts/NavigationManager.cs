@@ -5,6 +5,7 @@ namespace Assets.Scripts
 {
     public class NavigationManager : MonoBehaviour
     {
+        public static bool SwitchToChooseOponentScreen;
 
         public GameObject startScreen;
         public GameObject howToPlayScreen;
@@ -15,9 +16,15 @@ namespace Assets.Scripts
         private void Start()
         {
             allScenes = new[] {startScreen, howToPlayScreen, chooseOpponentScene};
-            setScene(startScreen);
-
-            Invoke("howToPlay", 1);
+            if (SwitchToChooseOponentScreen)
+            {
+                setScene(chooseOpponentScene);
+            }
+            else
+            {
+                setScene(startScreen);
+                Invoke("howToPlay", 1);
+            }
         }
 
         private void setScene(GameObject newScene)
@@ -40,6 +47,7 @@ namespace Assets.Scripts
 
         public void StartScene()
         {
+            SwitchToChooseOponentScreen = true;
             SceneManager.LoadScene("FightScene");
         }
     }

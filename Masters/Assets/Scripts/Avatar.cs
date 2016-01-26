@@ -6,7 +6,7 @@ using Assets.Shared.Scripts;
 using DefaultNamespace;
 using UnityEngine;
 
-[RequireComponent(typeof (Animator))]
+[RequireComponent(typeof(Animator))]
 public class Avatar : MonoBehaviour
 {
     public float jumpDuration = 1;
@@ -15,6 +15,8 @@ public class Avatar : MonoBehaviour
     public float jumpingSpeed = 19;
     public float runningSpeed = 25;
     public float speed = 15;
+    public float sceneOffset;
+
     public PlayerProfile PlayerProfile;
     private Tween tween;
 
@@ -50,7 +52,7 @@ public class Avatar : MonoBehaviour
 
     public enum Command
     {
-        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch,  
+        MoveLeft, MoveRight, MoveNone, Jump, Block, Punch,
         NoBlock
     }
 
@@ -61,6 +63,18 @@ public class Avatar : MonoBehaviour
     }
 
     public bool Active { get; set; }
+
+    public void Restart()
+    {
+        positionPlayer();
+        CurrentState = State.Idle;
+        GetComponent<Animator>().SetTrigger("Ressurect");
+    }
+
+    private void positionPlayer()
+    {
+        transform.SetX(sceneOffset);
+    }
 
     public void process(Command command)
     {
@@ -82,7 +96,7 @@ public class Avatar : MonoBehaviour
                 CurrentDirectionTimeStamp = Time.time;
             }
         }
-        
+
         if (command == Command.MoveRight)
         {
             if (CurrentDirection != Command.MoveRight)
@@ -91,14 +105,14 @@ public class Avatar : MonoBehaviour
                 CurrentDirectionTimeStamp = Time.time;
             }
         }
-        
+
         if (command == Command.MoveNone)
         {
             CurrentDirection = Command.MoveNone;
             CurrentDirectionTimeStamp = -1;
         }
 
-        if (command == Command.Jump && CurrentState!= State.Jumping)
+        if (command == Command.Jump && CurrentState != State.Jumping)
         {
 
             iTween.MoveTo(jumpHelper,
@@ -181,7 +195,7 @@ public class Avatar : MonoBehaviour
         else if (CurrentDirection == Command.MoveNone)
         {
             movingDirection = 0;
-            
+
         }
 
         if (CurrentState == State.Blocking || CurrentState == State.Laying) return;
@@ -208,15 +222,15 @@ public class Avatar : MonoBehaviour
                 break;
             case State.Walking:
                 turnPlayer(facingDirection);
-                move(movingDirection*walkingSpead);
+                move(movingDirection * walkingSpead);
                 GetComponent<Animator>().SetFloat("Speed", 1);
                 break;
             case State.Running:
                 turnPlayer(movingDirection);
-                move(movingDirection*runningSpeed);
+                move(movingDirection * runningSpeed);
                 GetComponent<Animator>().SetFloat("Speed", 2);
                 break;
-                case State.Jumping:
+            case State.Jumping:
                 if (movingDirection != 0) turnPlayer(movingDirection);
                 move(movingDirection * jumpingSpeed);
                 break;
@@ -237,7 +251,7 @@ public class Avatar : MonoBehaviour
     private void resetState()
     {
         if (CurrentDirectionTimeStamp != -1) CurrentDirectionTimeStamp = Time.time;
-        if(CurrentState!=State.Blocking)CurrentState = State.Idle;
+        if (CurrentState != State.Blocking) CurrentState = State.Idle;
     }
 
     private void move(float speed)
@@ -245,7 +259,7 @@ public class Avatar : MonoBehaviour
         Direction = Mathf.Sign(speed);
         if (AllowMovement || CurrentState == State.Jumping)
         {
-            transform.AddX(speed*Time.deltaTime);
+            transform.AddX(speed * Time.deltaTime);
         }
     }
 
@@ -254,7 +268,7 @@ public class Avatar : MonoBehaviour
         if (CurrentState == State.Dead) return;
         if (CurrentState == State.Blocking)
         {
-            PlayerProfile.HealthBar.Value -= damage/5;
+            PlayerProfile.HealthBar.Value -= damage / 5;
             iTween.MoveTo(gameObject,
                 new Hashtable
                             {
@@ -267,7 +281,7 @@ public class Avatar : MonoBehaviour
         {
             //TODO fix this avatar should fall down
         }
-        else 
+        else
         {
             PlayerProfile.HealthBar.Value -= damage;
             if (damage <= 10)
@@ -293,7 +307,12 @@ public class Avatar : MonoBehaviour
             CurrentState = State.Dead;
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<BoxCollider2D>().enabled = false;
-            setupFight.fightEnd(gameObject == enemy);
+
+            PlayerProfile.HealthBar.RemoveHeath();
+            PlayerProfile.HealthBar.ResetHealth();
+            setupFight.restartScene();
+
+            //setupFight.fightEnd(gameObject == enemy);
         }
     }
 

@@ -18,8 +18,6 @@ namespace DefaultNamespace
             player = GameObject.FindGameObjectWithTag("asdfasdfads").GetComponent<Avatar>();
             enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf").GetComponent<Avatar>();
 
-            player.Active = false;
-            enemy.Active = false;
 
             repo = FindObjectsOfType<Repository>()[0];
             playerFighter = FindObjectsOfType<Repository>()[0].FighterType;
@@ -29,7 +27,7 @@ namespace DefaultNamespace
             player.GetComponentInChildren<Avatar>().PlayerProfile.Profile.sprite =
                 Resources.LoadAll<Sprite>("Profiles").First(sprite => sprite.name == playerFighter.ToString());
 
-            GetComponent<Animator>().SetTrigger("Start");
+            restartScene();
         }
 
         public void StartTheGame()
@@ -54,11 +52,32 @@ namespace DefaultNamespace
                     EndGame();
                 }
             }
+            else
+            {
+                Dead();
+            }
         }
 
+        private void Dead()
+        {
+            GetComponent<Animator>().SetTrigger("Dead");
+            player.Active = false;
+            enemy.Active = false;
+        }
         private void EndGame()
         {
             GetComponent<Animator>().SetTrigger("Victory");
+            player.Active = false;
+            enemy.Active = false;
+        }
+
+        public void restartScene()
+        {
+            player.Active = false;
+            enemy.Active = false;
+            player.Restart();
+            enemy.Restart();
+            GetComponent<Animator>().SetTrigger("Start");
         }
     }
 }

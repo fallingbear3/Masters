@@ -1,22 +1,23 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts
 {
     public class NavigationManager : MonoBehaviour
     {
 
-        public GameObject menuSceen;
+        public GameObject startScreen;
         public GameObject howToPlayScreen;
-        public GameObject fightScreen;
+        public GameObject chooseOpponentScene;
 
         private GameObject[] allScenes;
 
         private void Start()
         {
-            allScenes = new[] {menuSceen, howToPlayScreen, fightScreen};
-            setScene(menuSceen);
+            allScenes = new[] {startScreen, howToPlayScreen, chooseOpponentScene};
+            setScene(startScreen);
 
-            Invoke("howToPlay", 5);
+            Invoke("howToPlay", 1);
         }
 
         private void setScene(GameObject newScene)
@@ -30,6 +31,16 @@ namespace Assets.Scripts
         private void howToPlay()
         {
             setScene(howToPlayScreen);
+        }
+
+        public void chooseOponnetn()
+        {
+            setScene(chooseOpponentScene);
+        }
+
+        public void StartScene()
+        {
+            SceneManager.LoadScene("FightScene");
         }
     }
 }

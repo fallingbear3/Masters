@@ -3,6 +3,7 @@ using System.Collections;
 using Assets.Scripts;
 using Assets.Scripts.Attack;
 using Assets.Shared.Scripts;
+using DefaultNamespace;
 using UnityEngine;
 
 [RequireComponent(typeof (Animator))]
@@ -24,17 +25,22 @@ public class Avatar : MonoBehaviour
     private GameObject jumpHelper;
     private State _currentState;
     private bool enableRunning = true;
+    private SetupFight setupFight;
+    private GameObject player;
+    private GameObject enemy;
 
     public float Direction { get; private set; }
     public bool AllowMovement { get; set; }
 
     private void Start()
     {
-        var player = GameObject.FindGameObjectWithTag("asdfasdfads");
-        var enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
+        player = GameObject.FindGameObjectWithTag("asdfasdfads");
+        enemy = GameObject.FindGameObjectWithTag("asdfasdfasdfasaf");
 
         Opponent = gameObject == player ? enemy : player;
         jumpHelper = new GameObject("JumpHelper");
+
+        setupFight = FindObjectsOfType<SetupFight>()[0];
     }
 
     public enum State
@@ -287,6 +293,7 @@ public class Avatar : MonoBehaviour
             CurrentState = State.Dead;
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<BoxCollider2D>().enabled = false;
+            setupFight.fightEnd(gameObject == enemy);
         }
     }
 

@@ -59,18 +59,23 @@ public class Avatar : MonoBehaviour
 
     public bool Active { get; set; }
 
-    public void Restart()
+    public void Sleep()
     {
-        positionPlayer();
-        CurrentState = State.Idle;
-    CurrentDirectionTimeStamp = -1;
-    GetComponent<Animator>().SetTrigger("Ressurect");
-    CurrentDirection = Command.MoveNone;
-}
+        Active = false;
+    }
 
-    private void positionPlayer()
+    public void Reposition()
     {
+        GetComponent<Animator>().SetTrigger("Ressurect");
         transform.SetX(sceneOffset);
+    }
+
+    public void WakeUp()
+    {
+        Active = true;
+        CurrentState = State.Idle;
+        CurrentDirectionTimeStamp = -1;
+        CurrentDirection = Command.MoveNone;
     }
 
     public void process(Command command)
@@ -178,6 +183,7 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
+        if (!Active || CurrentState == State.Dead) return;
         if (Opponent == null || CurrentState == State.Dead) return;
         facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
         int movingDirection = 0;
@@ -310,8 +316,14 @@ public class Avatar : MonoBehaviour
             {
                 PlayerProfile.HealthBar.ResetHealth();
                 Opponent.GetComponent<Avatar>().PlayerProfile.HealthBar.ResetHealth();
-                setupFight.restartScene();
-                setupFight.ShowSceneText(gameObject == enemy);
+                if (gameObject == enemy)
+                {
+                    setupFight.WinRound();
+                }
+                else
+                {
+                    setupFight.FailRound();
+                }
             }
             else
             {

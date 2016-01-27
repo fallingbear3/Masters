@@ -19,6 +19,8 @@ namespace DefaultNamespace
         public Animator EndText;
         public Animator WinnerText;
         public Animator Credits;
+        public Animator FadeInOut;
+        private float _time = 0.5f;
 
         private void Awake()
         {
@@ -34,7 +36,8 @@ namespace DefaultNamespace
             player.GetComponentInChildren<Avatar>().PlayerProfile.Profile.sprite =
                 Resources.LoadAll<Sprite>("Profiles").First(sprite => sprite.name == playerFighter.ToString());
 
-            restartScene();
+            StartTheGame();
+            //restartScene();
         }
 
         public void fightEnd(bool success)
@@ -45,7 +48,10 @@ namespace DefaultNamespace
                 {
                     var next = Fighter.Next(playerFighter);
                     repo.FighterType = next;
-                    SceneManager.LoadScene("Menu");
+
+                    WinnerText.SetTrigger("Show");
+                    FadeInOut.SetTrigger("In");
+                    Invoke("GoToMenu", 0.5f);
                 }
                 else
                 {
@@ -59,49 +65,71 @@ namespace DefaultNamespace
             }
         }
 
+        private void GoToMenu()
+        {
+            SceneManager.LoadScene("Menu");
+        }
+
         private void Dead()
         {
             DeadText.SetTrigger("Show");
-            player.Active = false;
-            enemy.Active = false;
+            player.Sleep();
+            enemy.Sleep();
         }
 
         private void EndGame()
         {
             WinnerText.SetTrigger("Show");
-            player.Active = false;
-            enemy.Active = false;
+            player.Sleep();
+            enemy.Sleep();
             Credits.SetTrigger("Show");
-        }
-
-        public void restartScene()
-        {
-            player.Active = false;
-            enemy.Active = false;
-            player.Restart();
-            enemy.Restart();
-            enemy.GetComponent<AiController>().Restart();
-            FightText.SetTrigger("Show");
-
-            Invoke("StartTheGame", 1);
         }
 
         public void StartTheGame()
         {
-            player.Active = true;
-            enemy.Active = true;
+            FadeInOut.SetTrigger("Out");
+            FightText.SetTrigger("Show");
+
+            enemy.GetComponent<AiController>().Restart();
+            Invoke("WakeUp", 1f);
         }
 
-        public void ShowSceneText(bool success)
+        private void WakeUp()
         {
-            if (success)
-            {
-                WinnerText.SetTrigger("Show");
-            }
-            else
-            {
-                DeadText.SetTrigger("Show");
-            }
+            player.WakeUp();
+            enemy.WakeUp();
+        }
+
+        public void WinRound()
+        {
+            player.Active = false;
+            enemy.Active = false;
+            WinnerText.SetTrigger("Show");
+            Invoke("FadeIn", 2);
+            Invoke("RespoisitonPlayers", 2.5f);
+            Invoke("StartTheGame", 2.5f);
+        }
+
+        private void FadeIn()
+        {
+            FadeInOut.SetTrigger("In");
+        }
+
+
+        public void FailRound()
+        {
+            player.Active = false;
+            enemy.Active = false;
+            DeadText.SetTrigger("Show");
+            Invoke("FadeIn", 2);
+            Invoke("RespoisitonPlayers", 2.5f);
+            Invoke("StartTheGame", 2.5f);
+        }
+
+        private void RespoisitonPlayers()
+        {
+            player.Reposition();
+            enemy.Reposition();
         }
     }
 }

@@ -100,6 +100,7 @@ namespace Assets.Scripts.Ai
 
         public void Restart()
         {
+            waitTo = 0;
             flee = false;
         }
     }

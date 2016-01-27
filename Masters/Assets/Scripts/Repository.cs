@@ -19,7 +19,9 @@ namespace Assets.Scripts.model
 
         private void Awake()
         {
-           // PlayerPrefs.DeleteAll();
+            // TODO remove
+            FighterType = Fighter.Type.Strauss;
+            // PlayerPrefs.DeleteAll();
         }
     }
 }

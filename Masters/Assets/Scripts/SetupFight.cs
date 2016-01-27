@@ -79,7 +79,8 @@ namespace DefaultNamespace
 
         private void EndGame()
         {
-            WinnerText.SetTrigger("Show");
+            FadeInOut.SetTrigger("In");
+            EndText.SetTrigger("Show");
             player.Sleep();
             enemy.Sleep();
             Credits.SetTrigger("Show");

@@ -14,6 +14,12 @@ namespace DefaultNamespace
         private Fighter.Type playerFighter;
         private Repository repo;
 
+        public Animator FightText;
+        public Animator DeadText;
+        public Animator EndText;
+        public Animator WinnerText;
+        public Animator Credits;
+
         private void Awake()
         {
             player = GameObject.FindGameObjectWithTag("asdfasdfads").GetComponent<Avatar>();
@@ -29,12 +35,6 @@ namespace DefaultNamespace
                 Resources.LoadAll<Sprite>("Profiles").First(sprite => sprite.name == playerFighter.ToString());
 
             restartScene();
-        }
-
-        public void StartTheGame()
-        {
-            player.Active = true;
-            enemy.Active = true;
         }
 
         public void fightEnd(bool success)
@@ -61,15 +61,17 @@ namespace DefaultNamespace
 
         private void Dead()
         {
-            GetComponent<Animator>().SetTrigger("Dead");
+            DeadText.SetTrigger("Show");
             player.Active = false;
             enemy.Active = false;
         }
+
         private void EndGame()
         {
-            GetComponent<Animator>().SetTrigger("Victory");
+            WinnerText.SetTrigger("Show");
             player.Active = false;
             enemy.Active = false;
+            Credits.SetTrigger("Show");
         }
 
         public void restartScene()
@@ -79,7 +81,27 @@ namespace DefaultNamespace
             player.Restart();
             enemy.Restart();
             enemy.GetComponent<AiController>().Restart();
-            GetComponent<Animator>().SetTrigger("Start");
+            FightText.SetTrigger("Show");
+
+            Invoke("StartTheGame", 1);
+        }
+
+        public void StartTheGame()
+        {
+            player.Active = true;
+            enemy.Active = true;
+        }
+
+        public void ShowSceneText(bool success)
+        {
+            if (success)
+            {
+                WinnerText.SetTrigger("Show");
+            }
+            else
+            {
+                DeadText.SetTrigger("Show");
+            }
         }
     }
 }

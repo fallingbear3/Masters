@@ -309,7 +309,9 @@ public class Avatar : MonoBehaviour
             if (PlayerProfile.HealthBar.CurrentLives > 0)
             {
                 PlayerProfile.HealthBar.ResetHealth();
+                Opponent.GetComponent<Avatar>().PlayerProfile.HealthBar.ResetHealth();
                 setupFight.restartScene();
+                setupFight.ShowSceneText(gameObject == enemy);
             }
             else
             {

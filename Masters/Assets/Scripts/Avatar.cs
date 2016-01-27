@@ -17,6 +17,10 @@ public class Avatar : MonoBehaviour
     public float speed = 15;
     public float sceneOffset;
 
+    public AudioSource Jab;
+    public AudioSource Hit;
+    public AudioSource Miss;
+
     public PlayerProfile PlayerProfile;
     private Tween tween;
 
@@ -138,6 +142,7 @@ public class Avatar : MonoBehaviour
             case State.Blocking:
                 if (command == Command.Punch)
                 {
+                    Jab.Play();
                     GetComponent<Animator>().SetTrigger("Punch");
                     CurrentState = State.Attacking;
                 }
@@ -271,6 +276,7 @@ public class Avatar : MonoBehaviour
         if (CurrentState == State.Dead) return;
         if (CurrentState == State.Blocking)
         {
+            Miss.Play();
             PlayerProfile.HealthBar.Value -= damage / 5;
             iTween.MoveTo(gameObject,
                 new Hashtable
@@ -286,6 +292,7 @@ public class Avatar : MonoBehaviour
         }
         else
         {
+            Hit.Play();
             PlayerProfile.HealthBar.Value -= damage;
             if (damage <= 10)
             {

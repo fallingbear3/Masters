@@ -38,6 +38,8 @@ namespace DefaultNamespace
 
             StartTheGame();
             //restartScene();
+
+            FindObjectsOfType<AudioManager>()[0].PlayB();
         }
 
         public void fightEnd(bool success)
@@ -79,6 +81,7 @@ namespace DefaultNamespace
 
         private void EndGame()
         {
+            FindObjectsOfType<AudioManager>()[0].PlayA();
             FadeInOut.SetTrigger("In");
             EndText.SetTrigger("Show");
             player.Sleep();
@@ -106,6 +109,7 @@ namespace DefaultNamespace
             player.Active = false;
             enemy.Active = false;
             WinnerText.SetTrigger("Show");
+            FindObjectsOfType<AudioManager>()[0].applase.Play();
             Invoke("FadeIn", 2);
             Invoke("RespoisitonPlayers", 2.5f);
             Invoke("StartTheGame", 2.5f);
@@ -116,12 +120,12 @@ namespace DefaultNamespace
             FadeInOut.SetTrigger("In");
         }
 
-
         public void FailRound()
         {
             player.Active = false;
             enemy.Active = false;
             DeadText.SetTrigger("Show");
+            FindObjectsOfType<AudioManager>()[0].laughter.Play();
             Invoke("FadeIn", 2);
             Invoke("RespoisitonPlayers", 2.5f);
             Invoke("StartTheGame", 2.5f);

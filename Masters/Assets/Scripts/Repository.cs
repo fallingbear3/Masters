@@ -16,5 +16,11 @@ namespace Assets.Scripts.model
                 PlayerPrefsSerializer.Save("FighterType", fighterType);
             }
         }
+
+        private void Awake()
+        {
+            // TODO remove
+            // PlayerPrefs.DeleteAll();
+        }
     }
 }

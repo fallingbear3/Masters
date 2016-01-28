@@ -14,6 +14,7 @@ namespace DefaultNamespace
         private Fighter.Type playerFighter;
         private Repository repo;
 
+        public Animator PlayAgain;
         public Animator FightText;
         public Animator DeadText;
         public Animator EndText;
@@ -21,6 +22,7 @@ namespace DefaultNamespace
         public Animator Credits;
         public Animator FadeInOut;
         private float _time = 0.5f;
+        private AudioManager audioManager;
 
         private void Awake()
         {
@@ -37,9 +39,9 @@ namespace DefaultNamespace
                 Resources.LoadAll<Sprite>("Profiles").First(sprite => sprite.name == playerFighter.ToString());
 
             StartTheGame();
-            //restartScene();
 
-            FindObjectsOfType<AudioManager>()[0].PlayB();
+            audioManager = FindObjectsOfType<AudioManager>().FirstOrDefault(manager => true);
+           if(audioManager != null) audioManager.PlayB();
         }
 
         public void fightEnd(bool success)
@@ -52,8 +54,7 @@ namespace DefaultNamespace
                     repo.FighterType = next;
 
                     WinnerText.SetTrigger("Show");
-                    FadeInOut.SetTrigger("In");
-                    Invoke("GoToMenu", 0.5f);
+                    GoToMenuCoroutine();
                 }
                 else
                 {
@@ -67,6 +68,13 @@ namespace DefaultNamespace
             }
         }
 
+        private void GoToMenuCoroutine()
+        {
+            if (audioManager != null) audioManager.PlayA();
+            Invoke("FadeIn", 2);
+            Invoke("GoToMenu", 3f);
+        }
+
         private void GoToMenu()
         {
             SceneManager.LoadScene("Menu");
@@ -74,14 +82,15 @@ namespace DefaultNamespace
 
         private void Dead()
         {
-            DeadText.SetTrigger("Show");
+            repo.FighterType = Fighter.Type.Janacek;
+            EndText.SetTrigger("Show");
+            GoToMenuCoroutine();
             player.Sleep();
             enemy.Sleep();
         }
 
         private void EndGame()
         {
-            FindObjectsOfType<AudioManager>()[0].PlayA();
             FadeInOut.SetTrigger("In");
             EndText.SetTrigger("Show");
             player.Sleep();
@@ -94,7 +103,22 @@ namespace DefaultNamespace
             FadeInOut.SetTrigger("Out");
             FightText.SetTrigger("Show");
 
-            enemy.GetComponent<AiController>().Restart();
+            enemy.gameObject.AddComponent<AiController>();
+            switch (repo.FighterType)
+            {
+                case Fighter.Type.Janacek:
+                    enemy.GetComponent<AiController>().Reflexes = 0.6f;
+                    break;
+                case Fighter.Type.Wagner:
+                    enemy.GetComponent<AiController>().Reflexes = 0.4f;
+                    break;
+                case Fighter.Type.Martinu:
+                    enemy.GetComponent<AiController>().Reflexes = 0.2f;
+                    break;
+                case Fighter.Type.Strauss:
+                    enemy.GetComponent<AiController>().Reflexes = 0.1f;
+                    break;
+            }
             Invoke("WakeUp", 1f);
         }
 
@@ -108,8 +132,9 @@ namespace DefaultNamespace
         {
             player.Active = false;
             enemy.Active = false;
+            Destroy(enemy.GetComponent<AiController>());
             WinnerText.SetTrigger("Show");
-            FindObjectsOfType<AudioManager>()[0].applase.Play();
+            if (audioManager != null) audioManager.applase.Play();
             Invoke("FadeIn", 2);
             Invoke("RespoisitonPlayers", 2.5f);
             Invoke("StartTheGame", 2.5f);
@@ -124,8 +149,9 @@ namespace DefaultNamespace
         {
             player.Active = false;
             enemy.Active = false;
+            Destroy(enemy.GetComponent<AiController>());
             DeadText.SetTrigger("Show");
-            FindObjectsOfType<AudioManager>()[0].laughter.Play();
+            if (audioManager != null) audioManager.laughter.Play();
             Invoke("FadeIn", 2);
             Invoke("RespoisitonPlayers", 2.5f);
             Invoke("StartTheGame", 2.5f);

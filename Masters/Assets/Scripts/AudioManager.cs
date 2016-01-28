@@ -19,6 +19,14 @@ namespace DefaultNamespace
 
         private float duration = 5f;
 
+        private void Awake()
+        {
+            var audios = FindObjectsOfType<AudioManager>();
+            for (int i = 1; i < audios.Length; i++)
+            {
+                Destroy(audios[i]);
+            }
+        }
         private void Start()
         {
             DontDestroyOnLoad(transform.gameObject);

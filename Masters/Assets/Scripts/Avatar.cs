@@ -271,8 +271,14 @@ public class Avatar : MonoBehaviour
         }
     }
 
+    private float lastAttack = Time.time;
     public void damage(float damage, Avatar opponent)
     {
+        if (Time.time - lastAttack < 0.25f) return;
+
+        lastAttack = Time.time;
+
+        Debug.Log("Damage: "+Time.time+" "+opponent.gameObject.name);
         if (CurrentState == State.Dead) return;
         if (CurrentState == State.Blocking)
         {

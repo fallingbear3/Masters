@@ -1,6 +1,9 @@
 ﻿using System;
+using Assets.Scripts.model;
 using Assets.Shared.Scripts;
+using DefaultNamespace;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Ai
 {
@@ -8,7 +11,7 @@ namespace Assets.Scripts.Ai
     public class AiController : MonoBehaviour
     {
         private const int ATTACKING_DISTANCE = 7;
-        private const float reflexes = 0.55f;
+        public float Reflexes = 0.55f;
         private Avatar avatar;
         private Avatar avatarOpponent;
         private bool flee;
@@ -17,7 +20,8 @@ namespace Assets.Scripts.Ai
         private void Start()
         {
             avatar = GetComponent<Avatar>();
-            avatar.disableRunning(); //TODO take a look at this.
+            if (FindObjectsOfType<Repository>()[0].FighterType != Fighter.Type.Strauss)
+                avatar.disableRunning(); //TODO take a look at this.
             avatarOpponent = avatar.Opponent.GetComponent<Avatar>();
         }
 
@@ -33,10 +37,9 @@ namespace Assets.Scripts.Ai
             var distance = avatar.Opponent.transform.position.Distance(avatar.transform.position);
             var facing = Math.Sign(avatar.Opponent.transform.position.x - gameObject.transform.position.x);
 
-
-            if (avatarOpponent.CurrentState == Avatar.State.Attacking && distance <= ATTACKING_DISTANCE+5)
+            if (avatarOpponent.CurrentState == Avatar.State.Attacking && distance <= ATTACKING_DISTANCE + 5)
             {
-                if (UnityEngine.Random.value*5f > 2.5f)
+                if (Random.value*5f > 2.5f)
                 {
                     process(Avatar.Command.Block, 1f);
                 }
@@ -70,7 +73,6 @@ namespace Assets.Scripts.Ai
             }
             else if (avatar.Opponent.transform.position.Distance(avatar.transform.position) > ATTACKING_DISTANCE)
             {
-
                 if (facing > 0)
                 {
                     process(Avatar.Command.MoveRight);
@@ -88,20 +90,14 @@ namespace Assets.Scripts.Ai
 
         private void process(Avatar.Command command, float f)
         {
-            waitTo = Time.time + UnityEngine.Random.value*f;
+            waitTo = Time.time + Random.value*f;
             avatar.process(command);
         }
 
         private void process(Avatar.Command command)
         {
-            waitTo = Time.time + reflexes;
-            process(command, reflexes);
-        }
-
-        public void Restart()
-        {
-            waitTo = 0;
-            flee = false;
+            waitTo = Time.time + Reflexes;
+            process(command, Reflexes);
         }
     }
 }

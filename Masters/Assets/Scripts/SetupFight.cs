@@ -95,6 +95,7 @@ namespace DefaultNamespace
             EndText.SetTrigger("Show");
             player.Sleep();
             enemy.Sleep();
+            if (audioManager != null) audioManager.PlayA();
             Credits.SetTrigger("Show");
         }
 
@@ -116,7 +117,7 @@ namespace DefaultNamespace
                     enemy.GetComponent<AiController>().Reflexes = 0.2f;
                     break;
                 case Fighter.Type.Strauss:
-                    enemy.GetComponent<AiController>().Reflexes = 0.1f;
+                    enemy.GetComponent<AiController>().Reflexes = 0.125f;
                     break;
             }
             Invoke("WakeUp", 1f);
@@ -130,8 +131,7 @@ namespace DefaultNamespace
 
         public void WinRound()
         {
-            player.Active = false;
-            enemy.Active = false;
+            TurnOffActors();
             Destroy(enemy.GetComponent<AiController>());
             WinnerText.SetTrigger("Show");
             if (audioManager != null) audioManager.applase.Play();
@@ -147,14 +147,19 @@ namespace DefaultNamespace
 
         public void FailRound()
         {
-            player.Active = false;
-            enemy.Active = false;
+            TurnOffActors();
             Destroy(enemy.GetComponent<AiController>());
             DeadText.SetTrigger("Show");
             if (audioManager != null) audioManager.laughter.Play();
             Invoke("FadeIn", 2);
             Invoke("RespoisitonPlayers", 2.5f);
             Invoke("StartTheGame", 2.5f);
+        }
+
+        private void TurnOffActors()
+        {
+            player.Active = false;
+            enemy.Active = false;
         }
 
         private void RespoisitonPlayers()

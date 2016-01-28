@@ -59,9 +59,20 @@ public class Avatar : MonoBehaviour
         NoBlock
     }
 
-    public State CurrentState { get; private set; }
+    public State CurrentState { get; set; }
 
-    public bool Active { get; set; }
+    public bool Active
+    {
+        get { return _active; }
+        set
+        {
+            _active = value;
+            if (_active == false)
+            {
+                GetComponent<Animator>().SetFloat("Speed", 0);
+            }
+        }
+    }
 
     public void Sleep()
     {
@@ -70,6 +81,7 @@ public class Avatar : MonoBehaviour
 
     public void Reposition()
     {
+        GetComponent<Animator>().SetFloat("Speed", 0);
         GetComponent<Animator>().SetTrigger("Ressurect");
         transform.SetX(sceneOffset);
     }
@@ -188,6 +200,11 @@ public class Avatar : MonoBehaviour
 
     private void Update()
     {
+        if (!Active && CurrentState != State.Dead)
+        {
+            CurrentState = State.Idle;
+            return;
+        }
         if (!Active || CurrentState == State.Dead) return;
         if (Opponent == null || CurrentState == State.Dead) return;
         facingDirection = Math.Sign(Opponent.transform.position.x - gameObject.transform.position.x);
@@ -272,6 +289,8 @@ public class Avatar : MonoBehaviour
     }
 
     private float lastAttack = Time.time;
+    private bool _active;
+
     public void damage(float damage, Avatar opponent)
     {
         if (Time.time - lastAttack < 0.25f) return;

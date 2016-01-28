@@ -23,7 +23,7 @@ namespace Assets.Scripts
             else
             {
                 setScene(startScreen);
-                Invoke("howToPlay", 5);
+                Invoke("howToPlay", 10);
             }
         }
 

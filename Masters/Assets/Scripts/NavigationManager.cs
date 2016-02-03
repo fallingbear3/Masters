@@ -8,6 +8,7 @@ namespace Assets.Scripts
         public static bool SwitchToChooseOponentScreen;
 
         public GameObject startScreen;
+        public GameObject storyScreen;
         public GameObject howToPlayScreen;
         public GameObject chooseOpponentScene;
 
@@ -15,7 +16,7 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            allScenes = new[] {startScreen, howToPlayScreen, chooseOpponentScene};
+            allScenes = new[] {startScreen, storyScreen, howToPlayScreen, chooseOpponentScene};
             if (SwitchToChooseOponentScreen)
             {
                 setScene(chooseOpponentScene);
@@ -23,7 +24,8 @@ namespace Assets.Scripts
             else
             {
                 setScene(startScreen);
-                Invoke("howToPlay", 10);
+                Invoke("story", 10);
+                Invoke("howToPlay", 20);
             }
         }
 
@@ -35,6 +37,10 @@ namespace Assets.Scripts
             }
         }
 
+        private void story()
+        {
+            setScene(storyScreen);
+        }
         private void howToPlay()
         {
             setScene(howToPlayScreen);

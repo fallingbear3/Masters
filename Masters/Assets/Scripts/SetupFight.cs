@@ -14,6 +14,7 @@ namespace DefaultNamespace
         private Fighter.Type playerFighter;
         private Repository repo;
 
+        public Animator FinishHim;
         public Animator PlayAgain;
         public Animator FightText;
         public Animator DeadText;
@@ -162,10 +163,18 @@ namespace DefaultNamespace
             enemy.Active = false;
         }
 
+        public void FinishTitle()
+        {
+            if (audioManager != null) audioManager.applase.Play();
+            FinishHim.SetTrigger("Show");
+        }
+
         private void RespoisitonPlayers()
         {
             player.Reposition();
             enemy.Reposition();
+            player.GetComponent<Avatar>().PlayerProfile.HealthBar.ResetHealth();
+            enemy.GetComponent<Avatar>().PlayerProfile.HealthBar.ResetHealth();
         }
     }
 }

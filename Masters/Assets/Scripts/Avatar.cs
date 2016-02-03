@@ -84,6 +84,13 @@ public class Avatar : MonoBehaviour
         GetComponent<Animator>().SetFloat("Speed", 0);
         GetComponent<Animator>().SetTrigger("Ressurect");
         transform.SetX(sceneOffset);
+        
+            var systems = GetComponentsInChildren<ParticleSystem>();
+            foreach (var system in systems)
+            {
+                system.Stop();
+            }
+            bloodRunning = false;
     }
 
     public void WakeUp()
@@ -290,6 +297,7 @@ public class Avatar : MonoBehaviour
 
     private float lastAttack = Time.time;
     private bool _active;
+    private bool bloodRunning;
 
     public void damage(float damage, Avatar opponent)
     {
@@ -346,8 +354,6 @@ public class Avatar : MonoBehaviour
             PlayerProfile.HealthBar.RemoveHeath();
             if (PlayerProfile.HealthBar.CurrentLives > 0)
             {
-                PlayerProfile.HealthBar.ResetHealth();
-                Opponent.GetComponent<Avatar>().PlayerProfile.HealthBar.ResetHealth();
                 if (gameObject == enemy)
                 {
                     setupFight.WinRound();
@@ -360,6 +366,22 @@ public class Avatar : MonoBehaviour
             else
             {
                 setupFight.fightEnd(gameObject == enemy);
+            }
+        }
+        if (PlayerProfile.HealthBar.Value < 30)
+        {
+            if (!bloodRunning)
+            {
+                if (gameObject == enemy)
+                {
+                    setupFight.FinishTitle();
+                }
+                var systems = GetComponentsInChildren<ParticleSystem>();
+                foreach (var system in systems)
+                {
+                    system.Play();
+                }
+                bloodRunning = true;
             }
         }
     }

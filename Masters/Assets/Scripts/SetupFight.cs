@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Ai;
 using Assets.Scripts.model;
 using Shared.Scripts;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
 namespace DefaultNamespace
@@ -128,6 +130,13 @@ namespace DefaultNamespace
         {
             player.WakeUp();
             enemy.WakeUp();
+
+            var analyticsEvent = Analytics.CustomEvent("SceneStart", new Dictionary<string, object>
+            {
+                {"Level", repo.FighterType.ToString()}
+            });
+
+            Debug.Log(analyticsEvent);
         }
 
         public void WinRound()

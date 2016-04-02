@@ -25,7 +25,7 @@ namespace Assets.Scripts
             {
                 setScene(startScreen);
                 Invoke("story", 10);
-                Invoke("howToPlay", 20);
+                Invoke("howToPlay", 30);
             }
         }
 

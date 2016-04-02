@@ -305,7 +305,6 @@ public class Avatar : MonoBehaviour
 
         lastAttack = Time.time;
 
-        Debug.Log("Damage: "+Time.time+" "+opponent.gameObject.name);
         if (CurrentState == State.Dead) return;
         if (CurrentState == State.Blocking)
         {
